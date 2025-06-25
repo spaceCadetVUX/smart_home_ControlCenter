@@ -86,7 +86,7 @@ nav button.active {
 }
 
 nav button:hover {
-  background-color: #d9d9db;
+  background-color: #b4b4b4;
   transform: scale(1.05);
 }
 
@@ -138,30 +138,51 @@ header h1 {
 }
 
 .control-card {
-  background: #fff;
-  padding: 5px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  width: 200px;
-  margin-bottom: 20px;
-  display: none; /* Hidden by default, shown based on room */
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 16px;
+  width: 150px;
+  height: 120px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none; /* Show via JS */
   position: relative;
-  margin: 10px;
-  height: 150px;
   user-select: none;
+  margin: 10px;
+  text-align: cen;
+  font-family: sans-serif;
+  
+  transition: transform 0.5s ease;
 
 }
 
-.control-card h3{
-  font-size: 15px;
 
-  font-weight: bold;
-  border-radius: 10px;
+.gear-icon {
+  cursor: pointer;
+  position: absolute;
+  font-size: 20px;
+  bottom:10px;
+  right: 10px;
   color: #007bff;
- 
- 
+}
 
+.control-card h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+  padding-bottom: 6px;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #007bff;
+  padding: 10px;
+  width: 162px;
+  border: none;
+  margin-left: -16px;
+  margin-top: -16px;
+  border-top-left-radius: 16px;
+   border-top-right-radius: 16px;
+ 
 }
 
 .temp-slider {
@@ -177,17 +198,11 @@ header h1 {
 }
 
 
-.gear-icon {
-  cursor: pointer;
-  position: absolute;
-  font-size: 20px;
-  bottom:10px;
-  right: 10px;
-  color: #007bff;
-}
+
 
 .modal {
   display: none;
+  position: absolute;
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -281,6 +296,7 @@ header h1 {
 .control-card.garage-room {
   display: block; /* Initially show all for simplicity, will be toggled by JS */
 }
+
 
 .temp-display, .dimmer {
   font-size: 14px;
