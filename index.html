@@ -5,19 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Home Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 <body>
   <div class="container">
     <aside class="sidebar">
       <!-- Displaying the SMATOO logo and navigation menu for switching rooms -->
-      <div class="logo">AI Control</div>
+      <img src="src/logo/logo.webp" alt="Sample Image" class="logo">
       <nav>
-        <button class="active"><span class="icon">🛋️</span> Living</button>
-        <button><span class="icon">🍽️</span> Dining</button>
-        <button><span class="icon">🍳</span> Kitchen</button>
-        <button><span class="icon">🛏️</span> Bedroom</button>
-        <button><span class="icon">⚡</span> Garage</button>
+        <button class="active"><span class="icon"><i class="fas fa-couch"></i></span><h3>Living</h3></button>
+        <button><span class="icon"><i class="fas fa-utensils"></i></span><h3>Dining</h3></button>
+        <button><span class="icon"><i class="fas fa-blender"></i></span><h3>Kitchen</h3></button>
+        <button><span class="icon"><i class="fas fa-bed"></i></span><h3>Bedroom</h3></button>
+        <button><span class="icon"><i class="fas fa-bolt"></i></span><h3>Garage</h3></button>
       </nav>
+
     </aside>
     <main class="main-content">
       <!-- Header section with welcome message and user info -->

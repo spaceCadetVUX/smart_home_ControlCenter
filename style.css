@@ -21,55 +21,77 @@ body {
   border-bottom-left-radius: 150px;
 
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  height: 500px;
+  height: 600px;
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: bold;
-  color: #007bff;
   margin-bottom: 20px;
+  background-color: #ffffff;
+  width: 90%;
+  padding: 20px;
+  border-top-right-radius:60px ;
+  border-bottom-right-radius:60px ;
+  margin-left: -22px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+   transition: transform 0.8s ease; /* ← slower animation (1 second) */
+  
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 nav button {
   display: flex;
   align-items: center;
-  color: #333;
-  text-decoration: none;
-  margin: 10px 0;
-  padding: 10px;
+  gap: 10px; /* space between icon and text */
+  margin: 20px 0;
   border: none;
-  background: none;
-  width: 100%;
-  text-align: left;
-  border-radius: 5px;
+  background-color:white;
+  width: 70%;
+  height: 50px;
   cursor: pointer;
   transition: background-color 0.3s;
   user-select: none;
-  font-weight: bold;
-
+  padding: 0 15px;
+  border-radius: 30px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.5s ease;
+  margin-left: 23px;
 }
+
+nav button .icon {
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #ffffff;
+  color: #316087;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+nav button h3 {
+  font-size: 16px;
+  margin: 0;
+}
+
 
 nav button.active {
   background-color: #007bff;
   color: #fff;
+  transform: scale(1.15);
 }
 
 nav button:hover {
   background-color: #d9d9db;
+  transform: scale(1.05);
 }
 
-nav button .icon {
-  margin-right: 10px;
-  font-size: 20px;
-  padding: 10px;
-  font-weight: bold;
-  background-color: #343749;
-  border-radius: 10%;
-}
-.sidebar span{
-  font-weight: bold;
-}
+
+
 /* Main content styling */
 .main-content {
   flex-grow: 1;
@@ -120,7 +142,7 @@ header h1 {
   padding: 5px;
   border-radius: 10px;
   text-align: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   width: 200px;
   margin-bottom: 20px;
   display: none; /* Hidden by default, shown based on room */
@@ -128,7 +150,18 @@ header h1 {
   margin: 10px;
   height: 150px;
   user-select: none;
-  
+
+}
+
+.control-card h3{
+  font-size: 15px;
+
+  font-weight: bold;
+  border-radius: 10px;
+  color: #007bff;
+ 
+ 
+
 }
 
 .temp-slider {
