@@ -56,7 +56,7 @@ nav button {
   padding: 0 15px;
   border-radius: 30px;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease;
   margin-left: 23px;
 }
 
@@ -71,6 +71,7 @@ nav button .icon {
   width: 35px;
   height: 35px;
   border-radius: 50%;
+  margin-left: -7px;
 }
 
 nav button h3 {
@@ -85,9 +86,16 @@ nav button.active {
   transform: scale(1.15);
 }
 
+nav button.active:hover {
+  background-color: #007bff;
+  color: #fff;
+  transform: scale(1.15);
+}
+
 nav button:hover {
-  background-color: #b4b4b4;
-  transform: scale(1.05);
+  background-color: #ffffff;
+  transform: scale(1.1);
+  color: black;
 }
 
 
@@ -137,69 +145,99 @@ header h1 {
   margin-bottom: 20px;
 }
 
+
+
 .control-card {
-  background: #ffffff;
-  border-radius: 15px;
-  padding: 16px;
-  width: 150px;
-  height: 120px;
+  text-align: center;
+  width: 180px;
+  height: 200px;
+  border-radius: 20px;
+  margin: 10px 10px;
+
+
+  
+  background: #ffffff;  
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: none; /* Show via JS */
   position: relative;
   user-select: none;
-  margin: 10px;
-  text-align: cen;
   font-family: sans-serif;
-  
   transition: transform 0.5s ease;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.icon-button {
+  align-items: center;
+    background: none;
+
+
 
 }
 
 
+.icon-button i {
+  font-size: 30px;
+  color: #f8b34c;
+
+
+
+   
+
+}
 .gear-icon {
   cursor: pointer;
+  transition: transform 0.5s ease;
   position: absolute;
-  font-size: 20px;
-  bottom:10px;
-  right: 10px;
+  bottom: 20px;
+  right:20px ;
+}
+
+
+
+.gear-icon:hover{
+  transform: scale(1.5) rotate(90deg);
   color: #007bff;
-}
-
-.control-card h3 {
-  font-size: 16px;
   font-weight: bold;
-  margin: 0;
-  padding-bottom: 6px;
-  color: #ffffff;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #007bff;
-  padding: 10px;
-  width: 162px;
-  border: none;
-  margin-left: -16px;
-  margin-top: -16px;
-  border-top-left-radius: 16px;
-   border-top-right-radius: 16px;
- 
 }
 
+
+
+
+.control-card .icon{
+  font-size: 34px;
+  position: absolute;
+  bottom: 55px;
+  right: 10px;
+}
+
+
+.control-card-parameter{
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: space-around;
+  padding: 2px;
+
+  
+}
+.temp-display , .dimmer {
+  font-weight: bold;
+  
+}
+
+
+/* this is belong to modar */
 .temp-slider {
   width: 100%;
   margin: 10px 0;
 }
-
 .temp-slider {
   background: linear-gradient(to right, #fadbac, #f7b552);
   border-radius: 10px;
   appearance: none;
   height: 8px;
 }
-
-
-
-
 .modal {
   display: none;
   position: absolute;
@@ -210,7 +248,16 @@ header h1 {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.1);
+  opacity: 0;
+  transform: scale(0.6);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.5s ease;
+}
+.modal.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 .modal-content {
@@ -298,6 +345,9 @@ header h1 {
 }
 
 
+
+
+
 .temp-display, .dimmer {
   font-size: 14px;
   color: #666;
@@ -310,6 +360,7 @@ header h1 {
   display: inline-block;
   width: 50px;
   height: 24px;
+
 }
 
 .switch input {
@@ -351,29 +402,198 @@ input:checked + .slider:before {
 }
 
 /* AC control styling */
-.ac-control {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #fff;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+
+/* Animate AC Panel when shown */
+.ac-panel {
+  border-radius: 20px;
+  max-width: 400px;
+  margin: auto;
+  text-align: center;
+  background-color: white;
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  padding-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease-out forwards;
 }
 
-.temp-control {
-  font-size: 36px;
-  font-weight: bold;
-  color: #007bff;
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.ac-buttons button {
-  padding: 10px 20px;
-  margin-left: 10px;
-  border: none;
+.ac-h2-ctn {
   background-color: #007bff;
-  color: #fff;
+  width: 100%;
+  height: 60px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 40px 40px 0 0;
+  margin-bottom: 20px;
+}
+
+.ac-panel h2 {
+  margin: 0;
+  color: white;
+  font-size: 20px;
+}
+
+.ac-panel .knob label,
+.fan-speed label {
+  background-color: #ffffff;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 16px;
+  color: #333;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: inline-block;
+}
+
+.knobs {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.knob {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.knob input[type="range"] {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 6px;
+  background: #ff3f3f;
   border-radius: 5px;
+  outline: none;
+  transition: background 0.3s;
+}
+
+.knob input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  background: #00aaff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
   cursor: pointer;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.knob input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.2);
+}
+
+.fan-speed {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.fan-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fan-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ccc;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.fan-btn:hover {
+  transform: translateY(-2px);
+}
+
+.fan-btn.active {
+  background-color: #00aaff;
+  color: white;
+}
+
+.swing-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* Toggle switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: 0.4s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #00aaff;
+}
+
+input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+
+
+
+
+/* Responsive tweak */
+@media (max-width: 500px) {
+  .knobs {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fan-buttons {
+    flex-wrap: wrap;
+  }
 }

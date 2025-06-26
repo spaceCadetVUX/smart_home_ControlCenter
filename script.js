@@ -7,19 +7,6 @@ document.querySelectorAll('.switch input').forEach(input => {
   });
 });
 
-/* Add event listeners to AC buttons to control temperature */
-document.querySelectorAll('.ac-buttons button').forEach(button => {
-  button.addEventListener('click', function() {
-    const tempControl = document.querySelector('.temp-control span');
-    let temp = parseInt(tempControl.textContent);
-    if (this.textContent === 'AC ON') {
-      temp = 25;
-    } else if (this.textContent === 'AC OFF') {
-      temp = 21;
-    }
-    tempControl.textContent = `${temp}°C`;
-  });
-});
 
 /* Mapping between button label and corresponding class */
 const roomClassMap = {
@@ -113,3 +100,119 @@ document.querySelectorAll('.control-card').forEach(card => {
   });
 });
 
+
+
+// Open modal on gear icon click
+document.querySelectorAll('.gear-icon').forEach(icon => {
+  icon.addEventListener('click', function () {
+    const targetId = this.getAttribute('data-target');
+    const modal = document.getElementById(targetId);
+
+    modal.style.display = 'block'; // make sure it's visible
+    requestAnimationFrame(() => {
+      modal.classList.add('show'); // trigger animation
+    });
+  });
+});
+
+// Close modal on close button click
+document.querySelectorAll('.close-button').forEach(button => {
+  button.addEventListener('click', function () {
+    const targetId = this.getAttribute('data-target');
+    const modal = document.getElementById(targetId);
+
+    modal.classList.remove('show'); // animate out
+    setTimeout(() => {
+      modal.style.display = 'none'; // hide after animation
+    }, 500); // matches CSS transition duration
+  });
+});
+
+
+//ac
+  document.getElementById("tempRange").addEventListener("input", function () {
+    document.getElementById("tempValue").textContent = this.value;
+  });
+
+  // Update humidity display
+  document.getElementById("humidRange").addEventListener("input", function () {
+    document.getElementById("humidValue").textContent = this.value;
+  });
+
+  // Fan speed buttons
+  document.querySelectorAll(".fan-btn").forEach(button => {
+    button.addEventListener("click", function () {
+      document.querySelectorAll(".fan-btn").forEach(btn => btn.classList.remove("active"));
+      this.classList.add("active");
+      console.log("Fan Speed:", this.dataset.speed);
+    });
+  });
+
+  // Swing toggle
+  document.getElementById("swingToggle").addEventListener("change", function () {
+    const swingText = this.checked ? "On" : "Off";
+    document.getElementById("swingState").textContent = swingText;
+    console.log("Swing is", swingText);
+  });
+
+    const acPanel = document.querySelector(".ac-panel");
+  const acPowerToggle = document.getElementById("acPowerToggle");
+  const powerStateText = document.getElementById("powerState");
+
+  acPowerToggle.addEventListener("change", function () {
+    const isOn = this.checked;
+    powerStateText.textContent = isOn ? "On" : "Off";
+    acPanel.querySelectorAll(".knob input, .fan-btn, #swingToggle").forEach(el => {
+      el.disabled = !isOn;
+    });
+    document.querySelectorAll(".fan-btn").forEach(btn => {
+      btn.style.opacity = isOn ? 1 : 0.4;
+    });
+  });
+
+function updateRing(inputId, progressClass, textId, unit, min, max) {
+  const input = document.getElementById(inputId);
+  const circle = document.querySelector(`.${progressClass}`);
+  const text = document.getElementById(textId);
+
+  const update = () => {
+    const val = +input.value;
+    const percent = (val - min) / (max - min);
+    const dashoffset = 314 - (314 * percent);
+    circle.style.strokeDashoffset = dashoffset;
+    text.textContent = `${val}${unit}`;
+  };
+
+  input.addEventListener("input", update);
+  update(); // Initial
+}
+
+updateRing("tempRange", "progress.temp", "tempValueText", "°C", 16, 30);
+updateRing("humidRange", "progress.humid", "humidValueText", "%", 30, 70);
+
+
+  // Open modal and rotate icon
+  document.querySelectorAll('.gear-icon').forEach(icon => {
+    icon.addEventListener('click', function () {
+      const modalId = this.getAttribute('data-target');
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'block';
+        this.classList.add('rotated'); // rotate the icon
+      }
+    });
+  });
+
+  // Close modal and un-rotate icon
+  document.querySelectorAll('.close-button').forEach(button => {
+    button.addEventListener('click', function () {
+      const modalId = this.getAttribute('data-target');
+      const modal = document.getElementById(modalId);
+      if (modal) {
+        modal.style.display = 'none';
+        // find related icon
+        const icon = document.querySelector(`.gear-icon[data-target="${modalId}"]`);
+        if (icon) icon.classList.remove('rotated');
+      }
+    });
+  });

@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Home Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+/>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -37,37 +42,50 @@
       <section class="controls">
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
          <!-- Ceiling Light -->
-        <div class="control-card living-room">
-          <h3>Ceiling Light 
-            <span class="gear-icon" data-target="modal-ceiling">&#9881;</span>
+
+          <div class="control-card living-room">
+          <h3>cellig Lamp 
+            <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">75</span>%</div>
+          
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+
+          
+            <div class="temp-display"><span class="temp-value">2800</span>K</div>
+            <div class="dimmer"><span class="dim-value">50</span>%</div>
+          
           <label class="switch">
-            <input type="checkbox" checked>
+            <input type="checkbox">
             <span class="slider"></span>
           </label>
 
           <!-- Modal -->
-          <div class="modal" id="modal-ceiling">
+          <div class="modal" id="modal-celling-lamp">
             <div class="modal-content">
-              <span class="close-button" data-target="modal-ceiling">&times;</span>
+              <span class="close-button" data-target="modal-celling-lamp">&times;</span>
               <h4>Adjust Settings</h4>
-              <label>Temperature: <span class="modal-temp-value">2700</span>K</label>
-              <input type="range" min="2700" max="3000" step="10" value="2700" class="modal-temp-slider">
-              <label>Brightness: <span class="modal-dim-value">75</span>%</label>
-              <input type="range" min="0" max="100" step="1" value="75" class="modal-dim-slider">
+              <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
+              <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
+              <label>Brightness: <span class="modal-dim-value">50</span>%</label>
+              <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
             </div>
           </div>
         </div>
+          
 
         <!-- Floor Lamp -->
         <div class="control-card living-room">
           <h3>Floor Lamp 
-            <span class="gear-icon" data-target="modal-floor-lamp">&#9881;</span>
+             <i class="bi bi-sliders gear-icon" data-target="modal-floor-lamp"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2800</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">50</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2800</span>K</div>
+          <div class="dimmer"><span class="dim-value">50</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -90,10 +108,14 @@
         <!-- Table Lamp -->
         <div class="control-card living-room">
           <h3>Table Lamp 
-            <span class="gear-icon" data-target="modal-table-lamp">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-table-lamp"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">60</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">60</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -115,10 +137,14 @@
         <!-- Accent Light -->
         <div class="control-card living-room">
           <h3>Accent Light 
-            <span class="gear-icon" data-target="modal-accent-light">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-accent-light"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">40</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">40</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -143,11 +169,15 @@
         <!-- Dining Room Control Cards (2700K–3000K, Dimmable, Mood-setting) -->
          <!-- Chandelier -->
         <div class="control-card dining-room">
-          <h3>Chandelier 
-            <span class="gear-icon" data-target="modal-chandelier">&#9881;</span>
+          <h3>Chandelier
+            <i class="bi bi-sliders gear-icon" data-target="modal-chandelier"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">70</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">70</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -170,10 +200,14 @@
         <!-- Wall Sconce  -->
         <div class="control-card dining-room">
           <h3>Wall Sconce 
-            <span class="gear-icon" data-target="modal-wall-sconce">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-wall-sconce"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">45</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">45</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -196,11 +230,15 @@
 
         <!-- Kitchen Control Cards (4000K–5000K, Bright task-focused) -->
         <div class="control-card kitchen-room">
-          <h3>Recessed Light 
-            <span class="gear-icon" data-target="modal-recessed">&#9881;</span>
+          <h3>Recessed Light
+            <i class="bi bi-sliders gear-icon" data-target="modal-recessed"></i> 
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">4000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">100</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">4000</span>K</div>
+          <div class="dimmer"><span class="dim-value">100</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -222,11 +260,15 @@
 
 
         <div class="control-card kitchen-room">
-          <h3>Under Cabinet Light 
-            <span class="gear-icon" data-target="modal-cabinet">&#9881;</span>
+          <h3>Cabinet Light
+            <i class="bi bi-sliders gear-icon" data-target="modal-cabinet"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">4000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">80</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">4000</span>K</div>
+          <div class="dimmer"><span class="dim-value">80</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -250,10 +292,14 @@
 
         <div class="control-card kitchen-room">
           <h3>Pendant Light 
-            <span class="gear-icon" data-target="modal-pendant">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-pendant"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">4000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">90</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">4000</span>K</div>
+          <div class="dimmer"><span class="dim-value">90</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -276,10 +322,14 @@
 
         <div class="control-card kitchen-room">
           <h3>Track Light 
-            <span class="gear-icon" data-target="modal-track">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-track"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">4000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">70</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">4000</span>K</div>
+          <div class="dimmer"><span class="dim-value">70</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -302,11 +352,15 @@
 
         <!-- Bedroom Control Cards (2700K, Warm, Dimmable, Relaxing) -->
         <div class="control-card bedroom-room">
-          <h3>Ceiling Light 
-            <span class="gear-icon" data-target="modal-bedroom-ceiling">&#9881;</span>
+          <h3>Ceiling Light
+            <i class="bi bi-sliders gear-icon" data-target="odal-bedroom-ceiling"></i> 
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">30</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">30</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -329,10 +383,14 @@
 
         <div class="control-card bedroom-room">
           <h3>Bedside Lamp 
-            <span class="gear-icon" data-target="modal-bedside">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-bedside"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">20</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">20</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -354,10 +412,14 @@
 
         <div class="control-card bedroom-room">
           <h3>Smart Light 
-            <span class="gear-icon" data-target="modal-smart">&#9881;</span>
+            <i class="bi bi-sliders gear-icon" data-target="modal-smart"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">2700</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">25</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2700</span>K</div>
+          <div class="dimmer"><span class="dim-value">25</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -378,11 +440,16 @@
 
         <!-- Garage Control Cards (5000K–6500K, Bright, Utility-focused) -->
         <div class="control-card garage-room">
-          <h3>LED Ceiling 
-            <span class="gear-icon" data-target="modal-garage-led">&#9881;</span>
+          <h3>LED Ceiling
+            <i class="bi bi-sliders gear-icon" data-target="modal-garage-led"></i>
+     
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">5000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">100</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">5000</span>K</div>
+          <div class="dimmer"><span class="dim-value">100</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -402,11 +469,15 @@
         </div>
 
         <div class="control-card garage-room">
-          <h3>Motion Sensor Light 
-            <span class="gear-icon" data-target="modal-garage-motion">&#9881;</span>
+          <h3>Motion Sensor
+            <i class="bi bi-sliders gear-icon" data-target="modal-garage-motion"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">5000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">100</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">5000</span>K</div>
+          <div class="dimmer"><span class="dim-value">100</span>%</div>
           <label class="switch">
             <input type="checkbox">
             <span class="slider"></span>
@@ -426,11 +497,15 @@
         </div>
 
         <div class="control-card garage-room">
-          <h3>Task Lighting 
-            <span class="gear-icon" data-target="modal-garage-task">&#9881;</span>
+          <h3>Task Lighting
+            <i class="bi bi-sliders gear-icon" data-target="modal-garage-task"></i>
           </h3>
-          <div class="temp-display">Temp: <span class="temp-value">5000</span>K</div>
-          <div class="dimmer">Dim: <span class="dim-value">100</span>%</div>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">5000</span>K</div>
+          <div class="dimmer"><span class="dim-value">100</span>%</div>
           <label class="switch">
             <input type="checkbox" checked>
             <span class="slider"></span>
@@ -447,19 +522,50 @@
               <input type="range" min="0" max="100" step="1" value="100" class="modal-dim-slider">
             </div>
           </div>
+        </div>
+      </section>
+
+
+<section class="controls">
+  <!-- Air conditioner temperature control and on/off buttons -->
+<div class="ac-panel control-card living-room">
+  <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
+
+  <div class="knobs">
+    <div class="knob">
+      <label for="tempRange">Temperature</label>
+      <input type="range" id="tempRange" min="16" max="30" value="22" />
+      <p><span id="tempValue">22</span>°C</p>
+    </div>
+
+    <div class="knob">
+      <label for="humidRange">Humidity</label>
+      <input type="range" id="humidRange" min="30" max="70" value="50" />
+      <p><span id="humidValue">50</span>%</p>
+    </div>
+  </div>
+
+  <div class="fan-speed">
+    <label>Fan Speed:</label>
+    <div class="fan-buttons">
+      <button class="fan-btn active" data-speed="Low">Low</button>
+      <button class="fan-btn" data-speed="Medium">Medium</button>
+      <button class="fan-btn" data-speed="High">High</button>
+    </div>
+  </div>
+
+  <div class="swing-control">
+    <label class="switch">
+      <input type="checkbox" id="swingToggle">
+      <span class="slider"></span>
+    </label>
+    <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
+  </div>
 </div>
 
-      </section>
-      <section class="ac-control">
-        <!-- Air conditioner temperature control and on/off buttons -->
-        <div class="temp-control">
-          <span>25°C</span>
-        </div>
-        <div class="ac-buttons">
-          <button>AC ON</button>
-          <button>AC OFF</button>
-        </div>
-      </section>
+</section>
+
+
     </main>
   </div>
   <script src="script.js"></script>
