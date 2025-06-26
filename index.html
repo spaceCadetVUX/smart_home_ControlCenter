@@ -30,14 +30,9 @@
     <main class="main-content">
       <!-- Header section with welcome message and user info -->
       <header>
-        <h1>Welcome to Smart Home</h1>
-        <div class="user-info">
-          <span class="notification">🔔</span>
-          <div class="user">
-           
-            <span>Hope Young <br> Super Admin</span>
-          </div>
-        </div>
+
+
+
       </header>
       <section class="controls">
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
@@ -76,6 +71,36 @@
           
 
         <!-- Floor Lamp -->
+        <div class="control-card living-room">
+          <h3>Floor Lamp 
+             <i class="bi bi-sliders gear-icon" data-target="modal-floor-lamp"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+          
+          <div class="temp-display"><span class="temp-value">2800</span>K</div>
+          <div class="dimmer"><span class="dim-value">50</span>%</div>
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+
+          <!-- Modal -->
+          <div class="modal" id="modal-floor-lamp">
+            <div class="modal-content">
+              <span class="close-button" data-target="modal-floor-lamp">&times;</span>
+              <h4>Adjust Settings</h4>
+              <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
+              <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
+              <label>Brightness: <span class="modal-dim-value">50</span>%</label>
+              <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
+            </div>
+          </div>
+        </div>
+
+
+        <!-- ac -->
         <div class="control-card living-room">
           <h3>Floor Lamp 
              <i class="bi bi-sliders gear-icon" data-target="modal-floor-lamp"></i>
@@ -530,6 +555,18 @@
   <!-- Air conditioner temperature control and on/off buttons -->
 <div class="ac-panel control-card living-room">
   <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
+
+  <div class="ac-power">
+    <i class="bi bi-thermometer-snow ac_icon"></i>
+    <div>
+      <label class="switch">
+      <input type="checkbox" id="acPowerToggle" checked>
+      <span class="slider"></span>
+      </label>
+      <span class="ac-status"><strong id="acState">On</strong></span>
+    </div>
+</div>
+
 
   <div class="knobs">
     <div class="knob">

@@ -130,89 +130,75 @@ document.querySelectorAll('.close-button').forEach(button => {
 
 
 //ac
-  document.getElementById("tempRange").addEventListener("input", function () {
-    document.getElementById("tempValue").textContent = this.value;
-  });
+document.addEventListener("DOMContentLoaded", () => {
+  // Temperature range
+  const tempRange = document.getElementById("tempRange");
+  const tempValue = document.getElementById("tempValue");
+  if (tempRange && tempValue) {
+    tempRange.addEventListener("input", () => {
+      tempValue.textContent = tempRange.value;
+    });
+  }
 
-  // Update humidity display
-  document.getElementById("humidRange").addEventListener("input", function () {
-    document.getElementById("humidValue").textContent = this.value;
-  });
+  // Humidity range
+  const humidRange = document.getElementById("humidRange");
+  const humidValue = document.getElementById("humidValue");
+  if (humidRange && humidValue) {
+    humidRange.addEventListener("input", () => {
+      humidValue.textContent = humidRange.value;
+    });
+  }
 
   // Fan speed buttons
-  document.querySelectorAll(".fan-btn").forEach(button => {
+  const fanButtons = document.querySelectorAll(".fan-btn");
+  fanButtons.forEach(button => {
     button.addEventListener("click", function () {
-      document.querySelectorAll(".fan-btn").forEach(btn => btn.classList.remove("active"));
+      fanButtons.forEach(btn => btn.classList.remove("active"));
       this.classList.add("active");
       console.log("Fan Speed:", this.dataset.speed);
     });
   });
 
   // Swing toggle
-  document.getElementById("swingToggle").addEventListener("change", function () {
-    const swingText = this.checked ? "On" : "Off";
-    document.getElementById("swingState").textContent = swingText;
-    console.log("Swing is", swingText);
-  });
+  const swingToggle = document.getElementById("swingToggle");
+  const swingState = document.getElementById("swingState");
+  if (swingToggle && swingState) {
+    swingToggle.addEventListener("change", () => {
+      const swingText = swingToggle.checked ? "On" : "Off";
+      swingState.textContent = swingText;
+      console.log("Swing is", swingText);
+    });
+  }
 
-    const acPanel = document.querySelector(".ac-panel");
+  // Date & Time updater
+  const dateTimeDisplay = document.getElementById("current-datetime");
+  function updateDateTime() {
+    const now = new Date();
+    const formatted =
+      now.toLocaleDateString("en-CA") + " " + now.toLocaleTimeString("en-GB");
+    if (dateTimeDisplay) dateTimeDisplay.textContent = formatted;
+  }
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+
+  // AC Power toggle
   const acPowerToggle = document.getElementById("acPowerToggle");
-  const powerStateText = document.getElementById("powerState");
+  const acStateText = document.getElementById("acState");
 
-  acPowerToggle.addEventListener("change", function () {
-    const isOn = this.checked;
-    powerStateText.textContent = isOn ? "On" : "Off";
-    acPanel.querySelectorAll(".knob input, .fan-btn, #swingToggle").forEach(el => {
-      el.disabled = !isOn;
+  if (acPowerToggle && acStateText) {
+    acPowerToggle.addEventListener("change", () => {
+      const isOn = acPowerToggle.checked;
+      acStateText.textContent = isOn ? "On" : "Off";
+
+      // Enable/Disable all controls
+      if (tempRange) tempRange.disabled = !isOn;
+      if (humidRange) humidRange.disabled = !isOn;
+      if (swingToggle) swingToggle.disabled = !isOn;
+
+      fanButtons.forEach(btn => {
+        btn.disabled = !isOn;
+        btn.style.opacity = isOn ? "1" : "0.5";
+      });
     });
-    document.querySelectorAll(".fan-btn").forEach(btn => {
-      btn.style.opacity = isOn ? 1 : 0.4;
-    });
-  });
-
-function updateRing(inputId, progressClass, textId, unit, min, max) {
-  const input = document.getElementById(inputId);
-  const circle = document.querySelector(`.${progressClass}`);
-  const text = document.getElementById(textId);
-
-  const update = () => {
-    const val = +input.value;
-    const percent = (val - min) / (max - min);
-    const dashoffset = 314 - (314 * percent);
-    circle.style.strokeDashoffset = dashoffset;
-    text.textContent = `${val}${unit}`;
-  };
-
-  input.addEventListener("input", update);
-  update(); // Initial
-}
-
-updateRing("tempRange", "progress.temp", "tempValueText", "°C", 16, 30);
-updateRing("humidRange", "progress.humid", "humidValueText", "%", 30, 70);
-
-
-  // Open modal and rotate icon
-  document.querySelectorAll('.gear-icon').forEach(icon => {
-    icon.addEventListener('click', function () {
-      const modalId = this.getAttribute('data-target');
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.style.display = 'block';
-        this.classList.add('rotated'); // rotate the icon
-      }
-    });
-  });
-
-  // Close modal and un-rotate icon
-  document.querySelectorAll('.close-button').forEach(button => {
-    button.addEventListener('click', function () {
-      const modalId = this.getAttribute('data-target');
-      const modal = document.getElementById(modalId);
-      if (modal) {
-        modal.style.display = 'none';
-        // find related icon
-        const icon = document.querySelector(`.gear-icon[data-target="${modalId}"]`);
-        if (icon) icon.classList.remove('rotated');
-      }
-    });
-  });
+  }
+});

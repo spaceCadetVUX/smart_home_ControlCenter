@@ -19,9 +19,10 @@ body {
   padding: 20px;
   border-bottom-right-radius: 150px;
   border-bottom-left-radius: 150px;
-
+  user-select: none;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   height: 600px;
+
 }
 
 .logo {
@@ -406,12 +407,13 @@ input:checked + .slider:before {
 
 /* Animate AC Panel when shown */
 .ac-panel {
+ 
   border-radius: 20px;
   max-width: 400px;
   margin: auto;
   text-align: center;
   background-color: white;
-  width: 90%;
+  width: 600px;
   max-width: 500px;
   height: auto;
   padding-bottom: 20px;
@@ -437,7 +439,7 @@ input:checked + .slider:before {
   justify-content: center;
   align-items: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 40px 40px 0 0;
+  border-radius: 20px 20px 0 0;
   margin-bottom: 20px;
 }
 
@@ -458,6 +460,7 @@ input:checked + .slider:before {
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: inline-block;
+
 }
 
 .knobs {
@@ -475,13 +478,15 @@ input:checked + .slider:before {
 }
 
 .knob input[type="range"] {
+  margin-top: 10px;
   -webkit-appearance: none;
-  width: 120px;
+  width: 160px;
   height: 6px;
-  background: #ff3f3f;
+  background: linear-gradient(to right, #20f4ff,#4facfe);
+  
   border-radius: 5px;
   outline: none;
-  transition: background 0.3s;
+  transition: background 0.1s;
 }
 
 .knob input[type="range"]::-webkit-slider-thumb {
@@ -501,22 +506,25 @@ input:checked + .slider:before {
 }
 
 .fan-speed {
-  margin-top: 10px;
+  margin-top: -10px;
   margin-bottom: 20px;
+  margin-left: -200px;
 }
 
 .fan-buttons {
   display: flex;
+
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
+  
 }
 
 .fan-btn {
   padding: 8px 16px;
   border: none;
   border-radius: 8px;
-  background-color: #ccc;
+  background-color: #f1f1f1;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
 }
@@ -535,6 +543,13 @@ input:checked + .slider:before {
   align-items: center;
   justify-content: center;
   gap: 15px;
+  
+  padding: 10PX;
+  background-color: #ffffff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  width: 140PX;
+  border-radius: 40px;
+margin-left: 40px;
 }
 
 /* Toggle switch */
@@ -596,4 +611,23 @@ input:checked + .slider::before {
   .fan-buttons {
     flex-wrap: wrap;
   }
+}
+
+.ac-power{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 15px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    bottom: 40px;
+    right: 40px
+}
+
+.ac_icon{
+  font-size: 30px;
+  padding: 10px;
+  color: blue;
+
 }
