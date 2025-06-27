@@ -13,6 +13,19 @@ body {
   display: flex;
   width: 100%;
 }
+.date-display {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a2b49;
+  background-color: #ffffff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
 
 /* Sidebar styling for navigation */
 .sidebar {
@@ -668,17 +681,41 @@ input:checked + .slider::before {
 
 /* Selector Dropdown */
 .selector-group {
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 6px;
+  margin-bottom: 20px;
 }
 
+.selector-group label {
+  font-weight: 600;
+  color: #1a2b49;
+  margin-bottom: 4px;
+}
+
+/* Style the select dropdown */
 .selector-group select {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 10px 14px;
   font-size: 16px;
+  color: #1a2b49;
+  border: 1.5px solid #1a2b49;
+  border-radius: 8px;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='16' height='16' viewBox='0 0 20 20' fill='none' stroke='%231a2b49' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 8 10 12 14 8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+
+/* Optional: focus effect */
+.selector-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
 /* Button Styling */
