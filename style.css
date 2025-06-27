@@ -4,7 +4,9 @@ body {
   margin: 0;
   padding: 0;
   background-color: #f0f7ff;
-  display: flex;
+  display: flex   ;
+
+  
 }
 
 .container {
@@ -198,7 +200,7 @@ header h1 {
 
 
 .gear-icon:hover{
-  transform: scale(1.5) rotate(90deg);
+  transform: scale(1) rotate(90deg);
   color: #007bff;
   font-weight: bold;
 }
@@ -409,13 +411,13 @@ input:checked + .slider:before {
 .ac-panel {
  
   border-radius: 20px;
-  max-width: 400px;
+
   margin: auto;
   text-align: center;
   background-color: white;
   width: 600px;
   max-width: 500px;
-  height: auto;
+  height: 400px;
   padding-bottom: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
@@ -630,4 +632,124 @@ input:checked + .slider::before {
   padding: 10px;
   color: blue;
 
+}
+
+/* shuteer */
+
+/* Container Card Styling */
+.shutter-ctn.control-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  
+  width: 500px;
+  height: 420px;
+  margin: 20px auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.controller-card{
+  padding: 20px;
+}
+/* Title */
+.shutter-ctn h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: white;
+
+}
+.ac-h2-ctn h2{
+ font-size: 20px;
+}
+.blind-h2-ctn{
+  background-color: #007bff;
+  width: 100%;
+}
+
+/* Selector Dropdown */
+.selector-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.selector-group select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Button Styling */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+}
+
+/* Slider Group Styling */
+.slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.slider-group label {
+  font-weight: bold;
+}
+
+/* Slider Input Style */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(to right, #007bff 50%, #e0e0e0 50%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  outline: none;
+  transition: background 0.3s;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  background: #ffffff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+input[type="range"]::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  background: #ffffff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  cursor: pointer;
 }

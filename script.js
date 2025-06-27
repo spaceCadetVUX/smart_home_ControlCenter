@@ -202,3 +202,56 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+const slider = document.getElementById("blindSlider");
+const sliderValue = document.getElementById("sliderValue");
+const openBtn = document.getElementById("openBtn");
+const closeBtn = document.getElementById("closeBtn");
+const blindSelector = document.getElementById("blindSelector");
+
+// Store slider values for each blind
+const blindStates = {
+  living: 50,
+  bedroom: 50,
+  kitchen: 50
+};
+
+// Update the slider background gradient and value text
+function updateSliderUI() {
+  const value = slider.value;
+  sliderValue.textContent = value;
+  slider.style.background = `linear-gradient(to right, #007bff ${value}%, #e0e0e0 ${value}%)`;
+}
+
+// Slider input update
+slider.addEventListener("input", function () {
+  const selected = blindSelector.value;
+  blindStates[selected] = parseInt(this.value);
+  updateSliderUI();
+});
+
+// Open button sets to 100%
+openBtn.addEventListener("click", () => {
+  slider.value = 100;
+  blindStates[blindSelector.value] = 100;
+  updateSliderUI();
+});
+
+// Close button sets to 0%
+closeBtn.addEventListener("click", () => {
+  slider.value = 0;
+  blindStates[blindSelector.value] = 0;
+  updateSliderUI();
+});
+
+// Change blind selection
+blindSelector.addEventListener("change", () => {
+  const selected = blindSelector.value;
+  const value = blindStates[selected];
+  slider.value = value;
+  updateSliderUI();
+});
+
+// Initialize on load
+updateSliderUI();

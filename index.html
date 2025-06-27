@@ -551,56 +551,87 @@
       </section>
 
 
-<section class="controls">
-  <!-- Air conditioner temperature control and on/off buttons -->
-<div class="ac-panel control-card living-room">
-  <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
+      <section class="controls">
+        <!-- Air conditioner temperature control and on/off buttons -->
+      <div class="ac-panel control-card living-room">
+        <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
 
-  <div class="ac-power">
-    <i class="bi bi-thermometer-snow ac_icon"></i>
-    <div>
-      <label class="switch">
-      <input type="checkbox" id="acPowerToggle" checked>
-      <span class="slider"></span>
-      </label>
-      <span class="ac-status"><strong id="acState">On</strong></span>
-    </div>
-</div>
+        <div class="ac-power">
+          <i class="bi bi-thermometer-snow ac_icon"></i>
+          <div>
+            <label class="switch">
+            <input type="checkbox" id="acPowerToggle" checked>
+            <span class="slider"></span>
+            </label>
+            <span class="ac-status"><strong id="acState">On</strong></span>
+          </div>
+      </div>
 
 
-  <div class="knobs">
-    <div class="knob">
-      <label for="tempRange">Temperature</label>
-      <input type="range" id="tempRange" min="16" max="30" value="22" />
-      <p><span id="tempValue">22</span>°C</p>
-    </div>
+        <div class="knobs">
+          <div class="knob">
+            <label for="tempRange">Temperature</label>
+            <input type="range" id="tempRange" min="16" max="30" value="22" />
+            <p><span id="tempValue">22</span>°C</p>
+          </div>
 
-    <div class="knob">
-      <label for="humidRange">Humidity</label>
-      <input type="range" id="humidRange" min="30" max="70" value="50" />
-      <p><span id="humidValue">50</span>%</p>
-    </div>
-  </div>
+          <div class="knob">
+            <label for="humidRange">Humidity</label>
+            <input type="range" id="humidRange" min="30" max="70" value="50" />
+            <p><span id="humidValue">50</span>%</p>
+          </div>
+        </div>
 
-  <div class="fan-speed">
-    <label>Fan Speed:</label>
-    <div class="fan-buttons">
-      <button class="fan-btn active" data-speed="Low">Low</button>
-      <button class="fan-btn" data-speed="Medium">Medium</button>
-      <button class="fan-btn" data-speed="High">High</button>
-    </div>
-  </div>
+        <div class="fan-speed">
+          <label>Fan Speed:</label>
+          <div class="fan-buttons">
+            <button class="fan-btn active" data-speed="Low">Low</button>
+            <button class="fan-btn" data-speed="Medium">Medium</button>
+            <button class="fan-btn" data-speed="High">High</button>
+          </div>
+        </div>
 
-  <div class="swing-control">
-    <label class="switch">
-      <input type="checkbox" id="swingToggle">
-      <span class="slider"></span>
-    </label>
-    <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
-  </div>
-</div>
+        <div class="swing-control">
+          <label class="switch">
+            <input type="checkbox" id="swingToggle">
+            <span class="slider"></span>
+          </label>
+          <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
+        </div>
+      </div>
 
-</section>
+<!-- 
+blind -->
+      <div class="shutter-ctn control-card living-room">
+        <div class="ac-h2-ctn"><h2>Window Blind Controller</h2></div>
+        <div class="controller-card">
+          
+      
+
+          <div class="selector-group">
+            <label for="blindSelector">Select Blind:</label>
+            <select id="blindSelector">
+              <option value="living">Blind 1</option>
+              <option value="bedroom">Blind 2</option>
+              <option value="kitchen">Blind 3</option>
+              <option value="kitchen">Blind 3</option>
+              <option value="kitchen">Blind 3</option>
+            </select>
+          </div>
+
+          <div class="button-group">
+            <button id="openBtn">Open</button>
+            <button id="closeBtn">Close</button>
+          </div>
+
+          <div class="slider-group">
+            <label for="blindSlider">Opening: <span id="sliderValue">50</span>%</label>
+            <input type="range" id="blindSlider" min="0" max="100" value="50">
+          </div>
+        </div>
+      </div>
+
+      </section>
 
 
     </main>
