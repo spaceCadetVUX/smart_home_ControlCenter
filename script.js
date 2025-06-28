@@ -264,3 +264,11 @@ updateSliderUI();
 
   dateElement.textContent = formattedDate;
 
+// toggle the sidebar for mobile site
+  const toggleBtn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidebar');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+    toggleBtn.innerHTML = sidebar.classList.contains('hidden') ? '&gt;' : '&lt;';
+  });

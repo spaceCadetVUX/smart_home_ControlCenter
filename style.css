@@ -9,9 +9,14 @@ body {
   
 }
 
+
+
+
 .container {
   display: flex;
   width: 100%;
+  flex-direction: row;
+   
 }
 .date-display {
   font-family: 'Segoe UI', sans-serif;
@@ -159,6 +164,7 @@ header h1 {
   flex-wrap: wrap;
   justify-content: start;
   margin-bottom: 20px;
+
 }
 
 
@@ -213,7 +219,8 @@ header h1 {
 
 
 .gear-icon:hover{
-  transform: scale(1) rotate(90deg);
+  transform: scale(1.2);
+
   color: #007bff;
   font-weight: bold;
 }
@@ -422,20 +429,17 @@ input:checked + .slider:before {
 
 /* Animate AC Panel when shown */
 .ac-panel {
- 
-  border-radius: 20px;
-
-  margin: auto;
-  text-align: center;
-  background-color: white;
-  width: 600px;
-  max-width: 500px;
-  height: 400px;
-  padding-bottom: 20px;
+  display: flex;
+  width: 40%;
+  height: auto;
+  justify-content: center;
+  align-items: center;
+  position: relative;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   opacity: 0;
   transform: translateY(20px);
   animation: fadeInUp 0.5s ease-out forwards;
+  margin: auto;
 }
 
 @keyframes fadeInUp {
@@ -475,7 +479,19 @@ input:checked + .slider:before {
   font-weight: bold;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: inline-block;
+}
 
+.fan-speed{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+.fan-speed-child{
+  padding: 15px;
+  background-color: #ffffff;
+  border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .knobs {
@@ -520,11 +536,7 @@ input:checked + .slider:before {
   transform: scale(1.2);
 }
 
-.fan-speed {
-  margin-top: -10px;
-  margin-bottom: 20px;
-  margin-left: -200px;
-}
+
 
 .fan-buttons {
   display: flex;
@@ -559,12 +571,20 @@ input:checked + .slider:before {
   justify-content: center;
   gap: 15px;
   
-  padding: 10PX;
-  background-color: #ffffff;
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  width: 140PX;
-  border-radius: 40px;
-margin-left: 40px;
+  
+}
+.ac-switch-func{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around ;
+  align-items: center;
+  background-color: #ffffff ;
+  padding-bottom: 10px;
+  margin-top: 10px;
+ border-radius: 20px;
+  
+
 }
 
 /* Toggle switch */
@@ -629,19 +649,16 @@ input:checked + .slider::before {
 }
 
 .ac-power{
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 15px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-    bottom: 40px;
-    right: 40px
+display: flex;
+flex-direction: row;
+justify-content: center;
+align-items: center;
+
+
 }
 
 .ac_icon{
-  font-size: 30px;
+  font-size: 40px;
   padding: 10px;
   color: blue;
 
@@ -659,6 +676,7 @@ input:checked + .slider::before {
   margin: 20px auto;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   font-family: 'Segoe UI', sans-serif;
+  
 }
 
 .controller-card{
@@ -678,6 +696,10 @@ input:checked + .slider::before {
   background-color: #007bff;
   width: 100%;
 }
+.shutter-ctn{
+    background-color: #ffffff;
+    padding-bottom: 10px;
+}
 
 /* Selector Dropdown */
 .selector-group {
@@ -685,6 +707,11 @@ input:checked + .slider::before {
   flex-direction: column;
   gap: 6px;
   margin-bottom: 20px;
+  border-radius: 10px;
+  border: none;
+  background-color: #ffffff;
+  padding-top: 10px;
+ 
 }
 
 .selector-group label {
@@ -698,8 +725,8 @@ input:checked + .slider::before {
   padding: 10px 14px;
   font-size: 16px;
   color: #1a2b49;
-  border: 1.5px solid #1a2b49;
-  border-radius: 8px;
+ 
+  border-radius: 20px;
   background-color: white;
   appearance: none;
   -webkit-appearance: none;
@@ -709,13 +736,14 @@ input:checked + .slider::before {
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 16px 16px;
+  justify-content: center;
 }
 
 /* Optional: focus effect */
 .selector-group select:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+  
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
 }
 
 /* Button Styling */
@@ -789,4 +817,242 @@ input[type="range"]::-moz-range-thumb {
   border: 2px solid #007bff;
   border-radius: 50%;
   cursor: pointer;
+}
+
+
+
+/* 🌐 Responsive Layout for Tablets and Phones */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    background-color: white;
+   
+  }
+  header{
+    flex-direction: column;
+    justify-content: center;
+
+  }
+  .date-display{
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 10px;
+  font-weight: 300;
+  color: #000000;
+  box-shadow: none;
+  margin-top: 10px;
+  }
+
+  .logo-mobile{
+    width: 50%;
+    height: auto;
+    background-color: white;
+    border-radius: 50px;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+  }
+  .container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  /* ✅ Sidebar styles for phone */
+  .sidebar {
+        position: fixed;
+    top: 0;
+    width: 25%;
+    min-width: 100px;
+    height: 100%;
+    height: auto;
+    background-color: #fff;
+    padding: 10px 0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(0); /* shown by default */
+  }
+
+  .sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* Toggle button inside sidebar */
+  .toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: -25px;
+    transform: translateY(-50%);
+    width: 25px;
+    height: 50px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+
+
+  /* ✅ Hide sidebar text */
+  nav button h3 {
+    display: none;
+  }
+
+  /* ✅ Button style: circular, icon centered */
+  nav button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    background-color: white;
+    border: none;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    margin-left: -7px;
+  }
+
+  nav button .icon {
+    background: none;
+    font-size: 20px;
+    color: #316087;
+    margin-right: -7px;
+    display: flex;
+  }
+
+  /* ✅ Active state on mobile */
+  nav button.active,
+  nav button.active:hover {
+    background-color: #007bff !important;
+    color: white !important;
+    transform: scale(1.15) !important;
+  
+  }
+
+  nav button.active .icon {
+    color: white !important;
+  }
+
+  /* ✅ Hover effect for others */
+  nav button:hover:not(.active) {
+    background-color: #eee;
+    transform: scale(1.1);
+    color: black;
+  }
+
+  /* ✅ Logo on mobile (optional if kept) */
+  .logo {
+    display: none; /* or customize if you want it at the top */
+  }
+
+  /* ✅ Main content below fixed sidebar */
+  .main-content {
+    padding: 10px;
+    margin-bottom: 70px; /* leave space for fixed sidebar */
+  }
+
+
+
+  .controls {
+    justify-content: center;
+
+  }
+
+  .control-card {
+    width: 30%;
+    height: auto;
+    padding: 20px;
+    margin: 10px 10px;
+   
+  }
+
+  .ac-h2-ctn{
+    width: 100%;
+  }
+
+  .ac-panel {
+    width: 95%;
+    height: auto;
+     padding: 0px;
+  }
+
+  .knobs {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fan-buttons {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .shutter-ctn.control-card {
+    width: 100%;
+    height: auto;
+    background-color: #ffffff;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+  }
+
+  .swing-control {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ac-power {
+    right: 10px;
+    bottom: 10px;
+    padding: 10px;
+  }
+
+  .ac-switch-func{
+ 
+    width: 100%;
+
+    background: none;
+margin-left: -10px;
+
+  }
+  .shutter-ctn{
+    padding: 0px;
+    height: auto;
+
+
+  }
+}
+
+
+
+/* 👇 Prevent toggle button from showing on desktop */
+@media (min-width: 769px) {
+  .toggle-btn {
+    display: none;
+  }
+
+  .sidebar {
+    transform: none !important; /* Ensure desktop sidebar is always visible */
+  }
+  .logo-mobile{
+    display: none;
+  }
 }

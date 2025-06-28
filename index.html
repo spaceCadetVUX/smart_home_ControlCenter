@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Smart Home Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
   <link
   rel="stylesheet"
@@ -15,7 +16,8 @@
 </head>
 <body>
   <div class="container">
-    <aside class="sidebar">
+    <!-- Menu toggle button -->
+    <aside class="sidebar" id="sidebar">
       <!-- Displaying the SMATOO logo and navigation menu for switching rooms -->
       <img src="src/logo/logo.webp" alt="Sample Image" class="logo">
       <nav>
@@ -24,53 +26,81 @@
         <button><span class="icon"><i class="fas fa-blender"></i></span><h3>Kitchen</h3></button>
         <button><span class="icon"><i class="fas fa-bed"></i></span><h3>Bedroom</h3></button>
         <button><span class="icon"><i class="fas fa-bolt"></i></span><h3>Garage</h3></button>
+        <button><span class="icon"><i class="fa-solid fa-gear"></i></span><h3>Setting</h3></button>
       </nav>
-
+          <!-- Toggle Button (only visible on mobile) -->
+          <button id="toggleSidebar" class="toggle-btn">&lt;</button>
     </aside>
+
     <main class="main-content">
       <!-- Header section with welcome message and user info -->
       <header>
-
+        <img src="src/logo/logo.webp" alt="Sample Image" class="logo-mobile">
         <div class="date-display">
           Today: <span id="currentDate"></span>
         </div>
-
-
       </header>
       <section class="controls">
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
          <!-- Ceiling Light -->
-
           <div class="control-card living-room">
-          <h3>cellig Lamp 
-            <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
-          </h3>
-          
-          <div class="icon-button" onclick="handleClick()">
-            <i class="bi bi-lamp-fill"></i>
-          </div>
-
-          
-            <div class="temp-display"><span class="temp-value">2800</span>K</div>
-            <div class="dimmer"><span class="dim-value">50</span>%</div>
-          
-          <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-          </label>
-
-          <!-- Modal -->
-          <div class="modal" id="modal-celling-lamp">
-            <div class="modal-content">
-              <span class="close-button" data-target="modal-celling-lamp">&times;</span>
-              <h4>Adjust Settings</h4>
-              <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
-              <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
-              <label>Brightness: <span class="modal-dim-value">50</span>%</label>
-              <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
+            <h3>cellig Lamp 
+              <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
+            </h3>
+            <div class="icon-button" onclick="handleClick()">
+              <i class="bi bi-lamp-fill"></i>
             </div>
-          </div>
+              <div class="temp-display"><span class="temp-value">2800</span>K</div>
+              <div class="dimmer"><span class="dim-value">50</span>%</div>
+            
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+
+            <!-- Modal -->
+            <div class="modal" id="modal-celling-lamp">
+              <div class="modal-content">
+                <span class="close-button" data-target="modal-celling-lamp">&times;</span>
+                <h4>Adjust Settings</h4>
+                <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
+                <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
+                <label>Brightness: <span class="modal-dim-value">50</span>%</label>
+                <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
+              </div>
+            </div>
         </div>
+
+
+         <!-- TV -->
+          <div class="control-card living-room">
+            <h3>TV
+              <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
+            </h3>
+            <div class="icon-button" onclick="handleClick()">
+              <i class="fa-solid fa-tv"></i>
+            </div>
+              <div class="temp-display"><span class="temp-value">2800</span>K</div>
+              <div class="dimmer"><span class="dim-value">50</span>%</div>
+            
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider"></span>
+            </label>
+
+            <!-- Modal -->
+            <div class="modal" id="modal-celling-lamp">
+              <div class="modal-content">
+                <span class="close-button" data-target="modal-celling-lamp">&times;</span>
+                <h4>Adjust Settings</h4>
+                <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
+                <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
+                <label>Brightness: <span class="modal-dim-value">50</span>%</label>
+                <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
+              </div>
+            </div>
+        </div>
+
           
 
         <!-- Floor Lamp -->
@@ -556,52 +586,59 @@
 
       <section class="controls">
         <!-- Air conditioner temperature control and on/off buttons -->
-      <div class="ac-panel control-card living-room">
-        <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
+<!-- Air conditioner temperature control and on/off buttons -->
+<!-- Air conditioner temperature control and on/off buttons -->
+        <div class="ac-panel control-card living-room">
+          <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
 
-        <div class="ac-power">
-          <i class="bi bi-thermometer-snow ac_icon"></i>
-          <div>
-            <label class="switch">
-            <input type="checkbox" id="acPowerToggle" checked>
-            <span class="slider"></span>
-            </label>
-            <span class="ac-status"><strong id="acState">On</strong></span>
-          </div>
-      </div>
+          <div class="knobs">
+            <div class="knob">
+              <label for="tempRange">Temperature</label>
+              <input type="range" id="tempRange" min="16" max="30" value="22" />
+              <p><span id="tempValue">22</span>°C</p>
+            </div>
 
-
-        <div class="knobs">
-          <div class="knob">
-            <label for="tempRange">Temperature</label>
-            <input type="range" id="tempRange" min="16" max="30" value="22" />
-            <p><span id="tempValue">22</span>°C</p>
+            <div class="knob">
+              <label for="humidRange">Humidity</label>
+              <input type="range" id="humidRange" min="30" max="70" value="50" />
+              <p><span id="humidValue">50</span>%</p>
+            </div>
           </div>
 
-          <div class="knob">
-            <label for="humidRange">Humidity</label>
-            <input type="range" id="humidRange" min="30" max="70" value="50" />
-            <p><span id="humidValue">50</span>%</p>
+          <div class="fan-speed">
+            <div class="fan-speed-child">
+              <label>Fan Speed:</label>
+              <div class="fan-buttons">
+                <button class="fan-btn active" data-speed="Low">Low</button>
+                <button class="fan-btn" data-speed="Medium">Medium</button>
+                <button class="fan-btn" data-speed="High">High</button>
+              </div>
+            </div>
           </div>
+
+          <div class="ac-switch-func">
+              <div class="swing-control">
+              <label class="switch">
+                <input type="checkbox" id="swingToggle" />
+                <span class="slider"></span>
+              </label>
+              <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
+            </div>
+              
+            
+            <div class="ac-power">
+              <i class="bi bi-thermometer-snow ac_icon"></i>
+                <div class="ac-control">
+                  <label class="switch">
+                      <input type="checkbox" id="acPowerToggle" checked />
+                      <span class="slider"></span>
+                  </label>
+                  <span class="ac-status"><strong id="acState">On</strong></span>
+                  </div>
+                </div>
+          </div>
+         
         </div>
-
-        <div class="fan-speed">
-          <label>Fan Speed:</label>
-          <div class="fan-buttons">
-            <button class="fan-btn active" data-speed="Low">Low</button>
-            <button class="fan-btn" data-speed="Medium">Medium</button>
-            <button class="fan-btn" data-speed="High">High</button>
-          </div>
-        </div>
-
-        <div class="swing-control">
-          <label class="switch">
-            <input type="checkbox" id="swingToggle">
-            <span class="slider"></span>
-          </label>
-          <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
-        </div>
-      </div>
 
 <!-- 
 blind -->
