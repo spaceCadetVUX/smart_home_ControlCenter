@@ -300,7 +300,7 @@ updateSliderUI(slider.value);
 
 // sending
 
-const ESP32_IP = 'http://192.168.137.155'; // Your ESP32 IP
+const IP = 'http://192.168.1.106:8081'; // Your ESP32 IP
 
 // Debounce storage per lamp
 const debounceTimers = {};
@@ -318,7 +318,7 @@ function sendLampUpdate(lampId, useDebounce = true) {
   }];
 
   const sendRequest = () => {
-    fetch(`${ESP32_IP}/lamp-status`, {
+    fetch(`${IP}/lamp-status`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
