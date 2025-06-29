@@ -14,15 +14,18 @@ const now = new Date();
 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 const formattedDate = now.toLocaleDateString(undefined, options);
 dateElement.textContent = formattedDate;
+
+
+
+
+
 // toggle the sidebar for mobile site
 const toggleBtn = document.getElementById('toggleSidebar');
 const sidebar = document.getElementById('sidebar');
-
-  toggleBtn.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('hidden');
     toggleBtn.innerHTML = sidebar.classList.contains('hidden') ? '&gt;' : '&lt;';
-  });
-
+});
 
 /* Mapping between button label and corresponding class */
 const roomClassMap = {
@@ -33,6 +36,8 @@ const roomClassMap = {
   'garage': 'garage-room'
 };
 
+
+// sidebar selection
 /* Add event listeners to nav buttons to handle active state and switch room views */
 document.querySelectorAll('nav button').forEach(button => {
   button.addEventListener('click', function() {
@@ -63,86 +68,131 @@ document.querySelector('nav button.active')?.click();
 
 
 
-/* Temperature slider interaction for living room lights */
-document.querySelectorAll('.control-card.living-room .temp-slider').forEach(slider => {
-  slider.addEventListener('input', function () {
-    const value = this.value;
-    const card = this.closest('.control-card');
-    const tempDisplay = card.querySelector('.temp-value');
-    tempDisplay.textContent = value;
-    console.log(`${card.querySelector('h3').textContent} temp set to ${value}K`);
-  });
-});
 
 
 
-// Open modal on gear icon click
-document.querySelectorAll('.gear-icon').forEach(icon => {
-  icon.addEventListener('click', function () {
-    const targetId = this.getAttribute('data-target');
-    document.getElementById(targetId).style.display = 'block';
-  });
-});
+// Store lamp states
+const lampStates = {
+  // living
+  'celling-lamp-lv': { temp: 2700, dim: 50, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'floor-lamp-lv': { temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Table-Lamp-lv': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Accent-Light-lv': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
 
-// Close modal on close button click
-document.querySelectorAll('.close-button').forEach(button => {
-  button.addEventListener('click', function () {
-    const targetId = this.getAttribute('data-target');
-    document.getElementById(targetId).style.display = 'none';
-  });
-});
+  // dinning
+  'chandelier-Dining': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Wall-Sconce-Dining': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
 
-// Update temperature and dim from sliders
-document.querySelectorAll('.control-card').forEach(card => {
-  const tempValue = card.querySelector('.temp-value');
-  const dimValue = card.querySelector('.dim-value');
+  //  kitchen
+   'Recessed-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Cabinet-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Pendant-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Track-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
 
-  const modal = card.querySelector('.modal');
-  if (!modal) return; // skip cards without modals
+  // Bedroom 
+  'Ceiling-Light-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Bedside-Lamp-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Smart-Light-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  
+  //Garage
+  'LED-Ceiling-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
+  'otion-Sensor-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
+  'Task-Lighting-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
 
-  const modalTempSlider = modal.querySelector('.modal-temp-slider');
-  const modalDimSlider = modal.querySelector('.modal-dim-slider');
-  const modalTempValue = modal.querySelector('.modal-temp-value');
-  const modalDimValue = modal.querySelector('.modal-dim-value');
+};
 
-  modalTempSlider.addEventListener('input', () => {
-    modalTempValue.textContent = modalTempSlider.value;
-    tempValue.textContent = modalTempSlider.value;
-  });
+const { temp, dim } = lampStates['Pendant-Light-kitchen'];
+console.log(`Pendant Light: ${temp}K, ${dim}%`);
 
-  modalDimSlider.addEventListener('input', () => {
-    modalDimValue.textContent = modalDimSlider.value;
-    dimValue.textContent = modalDimSlider.value;
-  });
-});
+const modal = document.getElementById("universal-modal");
+const modalCloseBtn = document.getElementById("modal-close");
 
+const modalTempSlider = document.getElementById("modal-temp-slider");
+const modalDimSlider = document.getElementById("modal-dim-slider");
+const modalTempValue = document.getElementById("modal-temp-value");
+const modalDimValue = document.getElementById("modal-dim-value");
 
+let currentLampId = null;
 
 // Open modal on gear icon click
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
-    const targetId = this.getAttribute('data-target');
-    const modal = document.getElementById(targetId);
+    currentLampId = this.getAttribute('data-id');
+    const lamp = lampStates[currentLampId];
+    if (!lamp) return;
 
-    modal.style.display = 'block'; // make sure it's visible
-    requestAnimationFrame(() => {
-      modal.classList.add('show'); // trigger animation
-    });
+    // 🧠 Set dynamic range for temp
+    modalTempSlider.min = lamp.tempMin;
+    modalTempSlider.max = lamp.tempMax;
+    modalTempSlider.step = lamp.tempStep;
+
+    // Load values
+    modalTempSlider.value = lamp.temp;
+    modalDimSlider.value = lamp.dim;
+    modalTempValue.textContent = lamp.temp;
+    modalDimValue.textContent = lamp.dim;
+
+    // Show modal
+    modal.style.display = 'block';
+    requestAnimationFrame(() => modal.classList.add('show'));
   });
 });
 
-// Close modal on close button click
-document.querySelectorAll('.close-button').forEach(button => {
-  button.addEventListener('click', function () {
-    const targetId = this.getAttribute('data-target');
-    const modal = document.getElementById(targetId);
 
-    modal.classList.remove('show'); // animate out
-    setTimeout(() => {
-      modal.style.display = 'none'; // hide after animation
-    }, 500); // matches CSS transition duration
+// Close modal
+modalCloseBtn.addEventListener('click', () => {
+  modal.classList.remove('show');
+  setTimeout(() => modal.style.display = 'none', 500);
+});
+
+// Live updates while sliding
+modalTempSlider.addEventListener('input', () => {
+  const value = parseInt(modalTempSlider.value);
+  modalTempValue.textContent = value;
+
+  if (currentLampId) {
+    lampStates[currentLampId].temp = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`).closest('.control-card');
+    if (card) {
+      card.querySelector('.temp-value').textContent = value;
+    }
+  }
+});
+
+modalDimSlider.addEventListener('input', () => {
+  const value = parseInt(modalDimSlider.value);
+  modalDimValue.textContent = value;
+
+  if (currentLampId) {
+    lampStates[currentLampId].dim = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`).closest('.control-card');
+    if (card) {
+      card.querySelector('.dim-value').textContent = value;
+    }
+  }
+});
+
+
+// Initialize all control card displays with correct temp and dim values on page load
+window.addEventListener('DOMContentLoaded', () => {
+  Object.entries(lampStates).forEach(([id, state]) => {
+    const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
+    if (card) {
+      const tempSpan = card.querySelector('.temp-value');
+      const dimSpan = card.querySelector('.dim-value');
+      if (tempSpan) tempSpan.textContent = state.temp;
+      if (dimSpan) dimSpan.textContent = state.dim;
+    }
   });
 });
+
+
+
+
+
+
 
 
 //ac

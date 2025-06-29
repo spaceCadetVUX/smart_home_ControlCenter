@@ -187,14 +187,15 @@ header h1 {
   transition: transform 0.5s ease;
   justify-content: center;
   align-items: center;
+    opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.4s ease-out forwards;
 
 }
 
 .icon-button {
   align-items: center;
     background: none;
-
-
 
 }
 
@@ -678,7 +679,7 @@ align-items: center;
   font-family: 'Segoe UI', sans-serif;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.6s ease-out forwards;
   
 }
 
