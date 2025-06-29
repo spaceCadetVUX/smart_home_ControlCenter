@@ -67,7 +67,7 @@ document.querySelector('nav button.active')?.click();
 // Store lamp states
 const lampStates = {
   // living
-  'celling-lamp-lv': {status: "off", temp: 2700, dim: 50,temppMin: 2700, tempMax: 3000, tempStep: 1 },
+  'celling-lamp-lv': {status: "off", temp: 2700, dim: 50,temppMin: 2700, tempMax: 3000, tempStep: 10 },
   'floor-lamp-lv': {status: "off", temp: 2700, dim: 60,tempMin: 2700, tempMax: 3000, tempStep: 1 },
   'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70,tempMin: 2700, tempMax: 3000, tempStep: 1 },
   'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
@@ -102,86 +102,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-
-
-const modal = document.getElementById("universal-modal");
-const modalCloseBtn = document.getElementById("modal-close");
-const modalTempSlider = document.getElementById("modal-temp-slider");
-const modalDimSlider = document.getElementById("modal-dim-slider");
-const modalTempValue = document.getElementById("modal-temp-value");
-const modalDimValue = document.getElementById("modal-dim-value");
-let currentLampId = null;
-// Open modal on gear icon click
-document.querySelectorAll('.gear-icon').forEach(icon => {
-  icon.addEventListener('click', function () {
-    currentLampId = this.getAttribute('data-id');
-    const lamp = lampStates[currentLampId];
-    if (!lamp) return;
-
-    //  Set dynamic range for temp
-    modalTempSlider.min = lamp.tempMin;
-    modalTempSlider.max = lamp.tempMax;
-    modalTempSlider.step = lamp.tempStep;
-
-    // Load values
-    modalTempSlider.value = lamp.temp;
-    modalDimSlider.value = lamp.dim;
-    modalTempValue.textContent = lamp.temp;
-    modalDimValue.textContent = lamp.dim;
-
-    // Show modal
-    modal.style.display = 'block';
-    requestAnimationFrame(() => modal.classList.add('show'));
-  });
-});
-// Close modal
-modalCloseBtn.addEventListener('click', () => {
-  modal.classList.remove('show');
-  setTimeout(() => modal.style.display = 'none', 500);
-});
-// Live updates while sliding
-modalTempSlider.addEventListener('input', () => {
-  const value = parseInt(modalTempSlider.value);
-  modalTempValue.textContent = value;
-  if (currentLampId) {
-    lampStates[currentLampId].temp = value;
-
-    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`).closest('.control-card');
-    if (card) {
-      card.querySelector('.temp-value').textContent = value;
-    }
-  }
-});
-modalDimSlider.addEventListener('input', () => {
-  const value = parseInt(modalDimSlider.value);
-  modalDimValue.textContent = value;
-
-  if (currentLampId) {
-    lampStates[currentLampId].dim = value;
-
-    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`).closest('.control-card');
-    if (card) {
-      card.querySelector('.dim-value').textContent = value;
-    }
-  }
-});
-// Initialize all control card displays with correct temp and dim values on page load
-window.addEventListener('DOMContentLoaded', () => {
-  Object.entries(lampStates).forEach(([id, state]) => {
-    const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
-    if (card) {
-      const tempSpan = card.querySelector('.temp-value');
-      const dimSpan = card.querySelector('.dim-value');
-      if (tempSpan) tempSpan.textContent = state.temp;
-      if (dimSpan) dimSpan.textContent = state.dim;
-    }
-  });
-});
-
-
-
-
 
 
 //ac
@@ -298,7 +218,7 @@ function animateSliderKnob(from, to) {
       updateSliderUI(Math.round(current));
       return;
     }
-    current += difference * 0.07;
+    current += difference * 0.01;
     const rounded = Math.round(current);
     slider.value = rounded;
     updateSliderUI(rounded);
@@ -380,29 +300,134 @@ updateSliderUI(slider.value);
 
 // sending
 
-const ESP32_IP = 'http://192.168.137.54'; // Replace with your actual ESP32 IP
+const ESP32_IP = 'http://192.168.137.155'; // Your ESP32 IP
 
+// Debounce storage per lamp
+const debounceTimers = {};
+
+function sendLampUpdate(lampId, useDebounce = true) {
+  const lamp = lampStates[lampId];
+  if (!lamp) return;
+
+  const payload = [{
+    id: lampId,
+    name: lampId.replace(/-/g, ' '),
+    status: lamp.status,
+    temp: lamp.temp,
+    dim: lamp.dim
+  }];
+
+  const sendRequest = () => {
+    fetch(`${ESP32_IP}/lamp-status`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.text())
+      .then(msg => console.log("ESP32 Response:", msg))
+      .catch(err => console.error("ESP32 Error:", err));
+  };
+
+  if (useDebounce) {
+    clearTimeout(debounceTimers[lampId]);
+    debounceTimers[lampId] = setTimeout(sendRequest, 80); // 🔁 real-time feel, safe delay
+  } else {
+    sendRequest();
+  }
+}
+
+
+// Called when switch is toggled
 function sendSwitchStatus(checkbox) {
   const lampId = checkbox.getAttribute('data-id');
   const status = checkbox.checked ? 'on' : 'off';
 
-  const payload = [
-    {
-      id: lampId,
-      status: status
-    }
-  ];
-
-  fetch(`${ESP32_IP}/lamp-status`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.text())
-  .then(msg => console.log("ESP32 Response:", msg))
-  .catch(err => console.error("ESP32 Error:", err));
+  if (lampStates[lampId]) {
+    lampStates[lampId].status = status;
+    sendLampUpdate(lampId, false); // send immediately on toggle
+  } else {
+    console.warn(`Lamp ID "${lampId}" not found in lampStates.`);
+  }
 }
 
 
+
+// modal
+
+const modal = document.getElementById("universal-modal");
+const modalCloseBtn = document.getElementById("modal-close");
+const modalTempSlider = document.getElementById("modal-temp-slider");
+const modalDimSlider = document.getElementById("modal-dim-slider");
+const modalTempValue = document.getElementById("modal-temp-value");
+const modalDimValue = document.getElementById("modal-dim-value");
+let currentLampId = null;
+// Open modal on gear icon click
+document.querySelectorAll('.gear-icon').forEach(icon => {
+  icon.addEventListener('click', function () {
+    currentLampId = this.getAttribute('data-id');
+    const lamp = lampStates[currentLampId];
+    if (!lamp) return;
+
+    //  Set dynamic range for temp
+    modalTempSlider.min = lamp.tempMin;
+    modalTempSlider.max = lamp.tempMax;
+    modalTempSlider.step = lamp.tempStep;
+
+    // Load values
+    modalTempSlider.value = lamp.temp;
+    modalDimSlider.value = lamp.dim;
+    modalTempValue.textContent = lamp.temp;
+    modalDimValue.textContent = lamp.dim;
+
+    // Show modal
+    modal.style.display = 'block';
+    requestAnimationFrame(() => modal.classList.add('show'));
+  });
+});
+// Close modal
+modalCloseBtn.addEventListener('click', () => {
+  modal.classList.remove('show');
+  setTimeout(() => modal.style.display = 'none', 500);
+});
+modalTempSlider.addEventListener('input', () => {
+  const value = parseInt(modalTempSlider.value);
+  modalTempValue.textContent = value;
+
+  if (currentLampId) {
+    lampStates[currentLampId].temp = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+    if (card) {
+      card.querySelector('.temp-value').textContent = value;
+    }
+
+    sendLampUpdate(currentLampId); // debounced, feels real-time
+  }
+});
+
+modalDimSlider.addEventListener('input', () => {
+  const value = parseInt(modalDimSlider.value);
+  modalDimValue.textContent = value;
+
+  if (currentLampId) {
+    lampStates[currentLampId].dim = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+    if (card) card.querySelector('.dim-value').textContent = value;
+
+    sendLampUpdate(currentLampId);  // Send update
+  }
+});
+
+// Initialize all control card displays with correct temp and dim values on page load
+window.addEventListener('DOMContentLoaded', () => {
+  Object.entries(lampStates).forEach(([id, state]) => {
+    const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
+    if (card) {
+      const tempSpan = card.querySelector('.temp-value');
+      const dimSpan = card.querySelector('.dim-value');
+      if (tempSpan) tempSpan.textContent = state.temp;
+      if (dimSpan) dimSpan.textContent = state.dim;
+    }
+  });
+});
