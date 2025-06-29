@@ -8,6 +8,22 @@ document.querySelectorAll('.switch input').forEach(input => {
 });
 
 
+// date time - updating 
+const dateElement = document.getElementById("currentDate");
+const now = new Date();
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const formattedDate = now.toLocaleDateString(undefined, options);
+dateElement.textContent = formattedDate;
+// toggle the sidebar for mobile site
+const toggleBtn = document.getElementById('toggleSidebar');
+const sidebar = document.getElementById('sidebar');
+
+  toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('hidden');
+    toggleBtn.innerHTML = sidebar.classList.contains('hidden') ? '&gt;' : '&lt;';
+  });
+
+
 /* Mapping between button label and corresponding class */
 const roomClassMap = {
   'living': 'living-room',
@@ -203,72 +219,124 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-
-const slider = document.getElementById("blindSlider");
-const sliderValue = document.getElementById("sliderValue");
+const slider = document.getElementById("blindSlider");   // slider
+const sliderValue = document.getElementById("sliderValue");   // // check posistion
 const openBtn = document.getElementById("openBtn");
 const closeBtn = document.getElementById("closeBtn");
-const blindSelector = document.getElementById("blindSelector");
+const blindSelector = document.getElementById("blindSelector");     // options
+const selectAllSwitch = document.getElementById("selectAllSwitch");  // slect all blinds
 
-// Store slider values for each blind
 const blindStates = {
-  living: 50,
-  bedroom: 50,
-  kitchen: 50
+  living_blind_1: 100,
+  living_blind_2: 50,
+  living_blind_3: 50,
+  living_blind_4: 50,
+  living_blind_5: 50,
+  living_blind_6: 50,
+  living_blind_7: 50
 };
 
-// Update the slider background gradient and value text
-function updateSliderUI() {
-  const value = slider.value;
+let animationFrame = null;
+
+// Update the visible slider and background
+function updateSliderUI(value) {
   sliderValue.textContent = value;
   slider.style.background = `linear-gradient(to right, #007bff ${value}%, #e0e0e0 ${value}%)`;
 }
 
-// Slider input update
+// Animate the actual visible slider knob smoothly
+function animateSliderKnob(from, to) {
+  let current = from;
+
+  function step() {
+    const difference = to - current;
+
+    if (Math.abs(difference) < 0.5) {
+      current = to;
+      slider.value = Math.round(current);
+      updateSliderUI(Math.round(current));
+      return;
+    }
+
+    current += difference * 0.07;
+    const rounded = Math.round(current);
+    slider.value = rounded;
+    updateSliderUI(rounded);
+
+    animationFrame = requestAnimationFrame(step);
+  }
+
+  animationFrame = requestAnimationFrame(step);
+}
+
+// Animate all blinds or a selected one
+function animateSliderTo(target) {
+  cancelAnimationFrame(animationFrame);
+
+  if (selectAllSwitch.checked) {
+    Object.keys(blindStates).forEach(key => {
+      blindStates[key] = target; // instant state update, or you can animate per-blind if needed
+    });
+
+    // Use average value of all blinds as "from"
+    const avg =
+      Object.values(blindStates).reduce((a, b) => a + b, 0) /
+      Object.values(blindStates).length;
+    animateSliderKnob(parseInt(slider.value), target);
+  } else {
+    const selected = blindSelector.value;
+    const from = blindStates[selected];
+    blindStates[selected] = target;
+    animateSliderKnob(from, target);
+  }
+}
+
+// Manual slider drag
 slider.addEventListener("input", function () {
-  const selected = blindSelector.value;
-  blindStates[selected] = parseInt(this.value);
-  updateSliderUI();
+  const value = parseInt(this.value);
+  if (selectAllSwitch.checked) {
+    Object.keys(blindStates).forEach(key => {
+      blindStates[key] = value;
+    });
+  } else {
+    const selected = blindSelector.value;
+    blindStates[selected] = value;
+  }
+  updateSliderUI(value);
 });
 
-// Open button sets to 100%
-openBtn.addEventListener("click", () => {
-  slider.value = 100;
-  blindStates[blindSelector.value] = 100;
-  updateSliderUI();
-});
+// Open/Close buttons
+openBtn.addEventListener("click", () => animateSliderTo(100));
+closeBtn.addEventListener("click", () => animateSliderTo(0));
 
-// Close button sets to 0%
-closeBtn.addEventListener("click", () => {
-  slider.value = 0;
-  blindStates[blindSelector.value] = 0;
-  updateSliderUI();
-});
-
-// Change blind selection
+// Blind selection change
 blindSelector.addEventListener("change", () => {
-  const selected = blindSelector.value;
-  const value = blindStates[selected];
-  slider.value = value;
-  updateSliderUI();
+  if (!selectAllSwitch.checked) {
+    const selected = blindSelector.value;
+    const value = blindStates[selected];
+    slider.value = value;
+    updateSliderUI(value);
+  }
 });
 
-// Initialize on load
-updateSliderUI();
+// Select All toggle
+selectAllSwitch.addEventListener("change", () => {
+  if (selectAllSwitch.checked) {
+    const avg =
+      Object.values(blindStates).reduce((a, b) => a + b, 0) /
+      Object.values(blindStates).length;
+    slider.value = Math.round(avg);
+    updateSliderUI(Math.round(avg));
+  } else {
+    const selected = blindSelector.value;
+    const value = blindStates[selected];
+    slider.value = value;
+    updateSliderUI(value);
+  }
+});
 
-  const dateElement = document.getElementById("currentDate");
+// Initial setup
+slider.value = blindStates[blindSelector.value];
+updateSliderUI(slider.value);
+// Initialize on load  of dating 
 
-  const now = new Date();
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  const formattedDate = now.toLocaleDateString(undefined, options);
-
-  dateElement.textContent = formattedDate;
-
-// toggle the sidebar for mobile site
-  const toggleBtn = document.getElementById('toggleSidebar');
-  const sidebar = document.getElementById('sidebar');
-
-  toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('hidden');
-    toggleBtn.innerHTML = sidebar.classList.contains('hidden') ? '&gt;' : '&lt;';
-  });

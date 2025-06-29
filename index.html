@@ -44,7 +44,7 @@
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
          <!-- Ceiling Light -->
           <div class="control-card living-room">
-            <h3>cellig Lamp 
+            <h3>cellig Lamp
               <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
             </h3>
             <div class="icon-button" onclick="handleClick()">
@@ -72,40 +72,11 @@
         </div>
 
 
-         <!-- TV -->
-          <div class="control-card living-room">
-            <h3>TV
-              <i class="bi bi-sliders gear-icon" data-target="modal-celling-lamp"></i>
-            </h3>
-            <div class="icon-button" onclick="handleClick()">
-              <i class="fa-solid fa-tv"></i>
-            </div>
-              <div class="temp-display"><span class="temp-value">2800</span>K</div>
-              <div class="dimmer"><span class="dim-value">50</span>%</div>
-            
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider"></span>
-            </label>
 
-            <!-- Modal -->
-            <div class="modal" id="modal-celling-lamp">
-              <div class="modal-content">
-                <span class="close-button" data-target="modal-celling-lamp">&times;</span>
-                <h4>Adjust Settings</h4>
-                <label>Temperature: <span class="modal-temp-value">2800</span>K</label>
-                <input type="range" min="2700" max="3000" step="10" value="2800" class="modal-temp-slider">
-                <label>Brightness: <span class="modal-dim-value">50</span>%</label>
-                <input type="range" min="0" max="100" step="1" value="50" class="modal-dim-slider">
-              </div>
-            </div>
-        </div>
-
-          
-
+        
         <!-- Floor Lamp -->
         <div class="control-card living-room">
-          <h3>Floor Lamp 
+          <h3>Floor Lamp
              <i class="bi bi-sliders gear-icon" data-target="modal-floor-lamp"></i>
           </h3>
           <div class="icon-button" onclick="handleClick()">
@@ -618,25 +589,25 @@
 
           <div class="ac-switch-func">
               <div class="swing-control">
-              <label class="switch">
-                <input type="checkbox" id="swingToggle" />
-                <span class="slider"></span>
-              </label>
-              <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
-            </div>
+                <label class="switch">
+                  <input type="checkbox" id="swingToggle" />
+                  <span class="slider"></span>
+                </label>
+                <span class="swing-status">Swing: <strong id="swingState">Off</strong></span>
+              </div>
               
             
-            <div class="ac-power">
-              <i class="bi bi-thermometer-snow ac_icon"></i>
-                <div class="ac-control">
-                  <label class="switch">
-                      <input type="checkbox" id="acPowerToggle" checked />
-                      <span class="slider"></span>
-                  </label>
-                  <span class="ac-status"><strong id="acState">On</strong></span>
+              <div class="ac-power">
+                <i class="bi bi-thermometer-snow ac_icon"></i>
+                  <div class="ac-control">
+                    <label class="switch">
+                        <input type="checkbox" id="acPowerToggle" checked />
+                        <span class="slider"></span>
+                    </label>
+                    <span class="ac-status"><strong id="acState">On</strong></span>
+                    </div>
                   </div>
-                </div>
-          </div>
+            </div>
          
         </div>
 
@@ -645,20 +616,18 @@ blind -->
       <div class="shutter-ctn control-card living-room">
         <div class="ac-h2-ctn"><h2>Window Blind Controller</h2></div>
         <div class="controller-card">
-          
-      
-
           <div class="selector-group">
             <label for="blindSelector">Select Blind</label>
             <select id="blindSelector">
-              <option value="living">Blind 1</option>
-              <option value="bedroom">Blind 2</option>
-              <option value="kitchen">Blind 3</option>
-              <option value="kitchen">Blind 3</option>
-              <option value="kitchen">Blind 3</option>
+              <option value="living_blind_1">living's Blind 1</option>
+              <option value="living_blind_2">living's Blind 2</option>
+              <option value="living_blind_3">living's Blind 3</option>
+              <option value="living_blind_4">living's blind 4</option>
+              <option value="living_blind_5">living's Blind 5</option>
+              <option value="living_blind_6">living's Blind 6</option>
+              <option value="living_blind_7">living's Blind 7</option>
             </select>
           </div>
-
           <div class="button-group">
             <button id="openBtn">Open</button>
             <button id="closeBtn">Close</button>
@@ -669,8 +638,16 @@ blind -->
             <input type="range" id="blindSlider" min="0" max="100" value="50">
           </div>
         </div>
+          <div class="blind-select-all-group">
+              <div class="selector-group-ctn">
+                  <label for="selectAllSwitch">Select All</label>
+                  <label class="switch">
+                    <input type="checkbox" id="selectAllSwitch">
+                    <span class="slider"></span>
+                  </label>
+              </div>
+        </div>
       </div>
-
       </section>
 
 
