@@ -8,14 +8,13 @@ document.querySelectorAll('.switch input').forEach(input => {
 });
 
 
+
 // date time - updating 
 const dateElement = document.getElementById("currentDate");
 const now = new Date();
 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 const formattedDate = now.toLocaleDateString(undefined, options);
 dateElement.textContent = formattedDate;
-
-
 
 
 
@@ -26,7 +25,6 @@ toggleBtn.addEventListener('click', () => {
     sidebar.classList.toggle('hidden');
     toggleBtn.innerHTML = sidebar.classList.contains('hidden') ? '&gt;' : '&lt;';
 });
-
 /* Mapping between button label and corresponding class */
 const roomClassMap = {
   'living': 'living-room',
@@ -35,8 +33,6 @@ const roomClassMap = {
   'bedroom': 'bedroom-room',
   'garage': 'garage-room'
 };
-
-
 // sidebar selection
 /* Add event listeners to nav buttons to handle active state and switch room views */
 document.querySelectorAll('nav button').forEach(button => {
@@ -62,11 +58,8 @@ document.querySelectorAll('nav button').forEach(button => {
     }
   });
 });
-
 /* Auto-trigger default room (e.g., Living Room) on page load */
 document.querySelector('nav button.active')?.click();
-
-
 
 
 
@@ -74,46 +67,51 @@ document.querySelector('nav button.active')?.click();
 // Store lamp states
 const lampStates = {
   // living
-  'celling-lamp-lv': { temp: 2700, dim: 50, tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'floor-lamp-lv': { temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Table-Lamp-lv': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Accent-Light-lv': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'celling-lamp-lv': {status: "off", temp: 2700, dim: 50,temppMin: 2700, tempMax: 3000, tempStep: 1 },
+  'floor-lamp-lv': {status: "off", temp: 2700, dim: 60,tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70,tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
 
   // dinning
-  'chandelier-Dining': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Wall-Sconce-Dining': { temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'chandelier-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'Wall-Sconce-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
 
   //  kitchen
-   'Recessed-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Cabinet-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Pendant-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Track-Light-kitchen': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+   'Recessed-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Cabinet-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Pendant-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Track-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
 
   // Bedroom 
-  'Ceiling-Light-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Bedside-Lamp-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Smart-Light-Bed': { temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Ceiling-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Bedside-Lamp-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Smart-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
   
-  //Garage
-  'LED-Ceiling-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
-  'otion-Sensor-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
-  'Task-Lighting-garage': { temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
+  //Garageep
+  'LED-Ceiling-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
+  'otion-Sensor-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
+  'Task-Lighting-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
 
 };
 
-const { temp, dim } = lampStates['Pendant-Light-kitchen'];
-console.log(`Pendant Light: ${temp}K, ${dim}%`);
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll('input[type="checkbox"][data-id]').forEach(input => {
+    const lampId = input.getAttribute('data-id');
+    if (lampStates[lampId]) {
+      input.checked = lampStates[lampId].status === "on";
+    }
+  });
+});
+
+
 
 const modal = document.getElementById("universal-modal");
 const modalCloseBtn = document.getElementById("modal-close");
-
 const modalTempSlider = document.getElementById("modal-temp-slider");
 const modalDimSlider = document.getElementById("modal-dim-slider");
 const modalTempValue = document.getElementById("modal-temp-value");
 const modalDimValue = document.getElementById("modal-dim-value");
-
 let currentLampId = null;
-
 // Open modal on gear icon click
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
@@ -121,7 +119,7 @@ document.querySelectorAll('.gear-icon').forEach(icon => {
     const lamp = lampStates[currentLampId];
     if (!lamp) return;
 
-    // 🧠 Set dynamic range for temp
+    //  Set dynamic range for temp
     modalTempSlider.min = lamp.tempMin;
     modalTempSlider.max = lamp.tempMax;
     modalTempSlider.step = lamp.tempStep;
@@ -137,19 +135,15 @@ document.querySelectorAll('.gear-icon').forEach(icon => {
     requestAnimationFrame(() => modal.classList.add('show'));
   });
 });
-
-
 // Close modal
 modalCloseBtn.addEventListener('click', () => {
   modal.classList.remove('show');
   setTimeout(() => modal.style.display = 'none', 500);
 });
-
 // Live updates while sliding
 modalTempSlider.addEventListener('input', () => {
   const value = parseInt(modalTempSlider.value);
   modalTempValue.textContent = value;
-
   if (currentLampId) {
     lampStates[currentLampId].temp = value;
 
@@ -159,7 +153,6 @@ modalTempSlider.addEventListener('input', () => {
     }
   }
 });
-
 modalDimSlider.addEventListener('input', () => {
   const value = parseInt(modalDimSlider.value);
   modalDimValue.textContent = value;
@@ -173,8 +166,6 @@ modalDimSlider.addEventListener('input', () => {
     }
   }
 });
-
-
 // Initialize all control card displays with correct temp and dim values on page load
 window.addEventListener('DOMContentLoaded', () => {
   Object.entries(lampStates).forEach(([id, state]) => {
@@ -187,8 +178,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
-
-
 
 
 
@@ -269,6 +258,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+//shutter (blind)
 const slider = document.getElementById("blindSlider");   // slider
 const sliderValue = document.getElementById("sliderValue");   // // check posistion
 const openBtn = document.getElementById("openBtn");
@@ -307,7 +298,6 @@ function animateSliderKnob(from, to) {
       updateSliderUI(Math.round(current));
       return;
     }
-
     current += difference * 0.07;
     const rounded = Math.round(current);
     slider.value = rounded;
@@ -315,10 +305,8 @@ function animateSliderKnob(from, to) {
 
     animationFrame = requestAnimationFrame(step);
   }
-
   animationFrame = requestAnimationFrame(step);
 }
-
 // Animate all blinds or a selected one
 function animateSliderTo(target) {
   cancelAnimationFrame(animationFrame);
@@ -340,7 +328,6 @@ function animateSliderTo(target) {
     animateSliderKnob(from, target);
   }
 }
-
 // Manual slider drag
 slider.addEventListener("input", function () {
   const value = parseInt(this.value);
@@ -354,11 +341,9 @@ slider.addEventListener("input", function () {
   }
   updateSliderUI(value);
 });
-
 // Open/Close buttons
 openBtn.addEventListener("click", () => animateSliderTo(100));
 closeBtn.addEventListener("click", () => animateSliderTo(0));
-
 // Blind selection change
 blindSelector.addEventListener("change", () => {
   if (!selectAllSwitch.checked) {
@@ -384,9 +369,40 @@ selectAllSwitch.addEventListener("change", () => {
     updateSliderUI(value);
   }
 });
-
 // Initial setup
 slider.value = blindStates[blindSelector.value];
 updateSliderUI(slider.value);
 // Initialize on load  of dating 
+
+
+
+
+
+// sending
+
+const ESP32_IP = 'http://192.168.137.54'; // Replace with your actual ESP32 IP
+
+function sendSwitchStatus(checkbox) {
+  const lampId = checkbox.getAttribute('data-id');
+  const status = checkbox.checked ? 'on' : 'off';
+
+  const payload = [
+    {
+      id: lampId,
+      status: status
+    }
+  ];
+
+  fetch(`${ESP32_IP}/lamp-status`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.text())
+  .then(msg => console.log("ESP32 Response:", msg))
+  .catch(err => console.error("ESP32 Error:", err));
+}
+
 
