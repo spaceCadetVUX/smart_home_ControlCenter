@@ -845,6 +845,88 @@ input[type="range"]::-moz-range-thumb {
 }
 
 
+/* air quality */
+/* Container */
+.air_quality_container {
+  width: 600px;
+  height: auto;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.air_quality_container h1 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+/* Chart layout */
+.chart-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.chart-block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Chart header with status */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 8px;
+  box-sizing: border-box;
+  flex-direction: column;
+}
+
+.chart-header h2 {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #333;
+}
+
+canvas {
+  width: 100% !important;
+  height: 160px !important;
+
+}
+
+/* Status badge styles */
+.status-inline {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+}
+.narrow-chart {
+  flex: 0.6;
+}
+.wide-chart {
+  flex: 1.4;
+}
+
+.good { background: #4CAF50; }
+.moderate { background: #FFC107; color: black; }
+.unhealthy { background: #F44336; }
+.very-unhealthy { background: #9C27B0; }
+
+
+
 
 /* 🌐 Responsive Layout for Tablets and Phones */
 @media (max-width: 768px) {

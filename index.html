@@ -10,7 +10,7 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
 />
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 </head>
@@ -399,9 +399,51 @@ blind -->
               </div>
         </div>
       </div>
+
+
+      <div class="air_quality_container control-card living-room">
+        <h1>Indoor Air Quality</h1>
+
+        <!-- Row for CO2 -->
+        <div class="chart-row">
+          <div class="chart-block narrow-chart">
+            <div class="chart-header">
+              <h2>CO₂ Real-Time (ppm)</h2>
+              <span id="co2Status" class="status-inline"></span>
+            </div>
+            <canvas id="co2Realtime"></canvas>
+          </div>
+
+          <div class="chart-block wide-chart">
+            <div class="chart-header">
+              <h2>CO₂ History</h2>
+            </div>
+            <canvas id="co2Chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Row for PM -->
+        <div class="chart-row">
+          <div class="chart-block narrow-chart">
+            <div class="chart-header">
+              <h2>PM2.5 & PM10 Real-Time (µg/m³)</h2>
+              <span id="pmStatus" class="status-inline">:</span>
+            </div>
+            <canvas id="pmRealtime"></canvas>
+          </div>
+
+          <div class="chart-block wide-chart">
+            <div class="chart-header">
+              <h2>PM2.5 & PM10 History</h2>
+            </div>
+            <canvas id="pmChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+
+
       </section>
-
-
     </main>
   </div>
         <!-- Universal Modal -->
