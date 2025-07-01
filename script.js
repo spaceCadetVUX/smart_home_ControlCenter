@@ -451,7 +451,7 @@ let timeLabels = [];
 let co2History = [];
 let pm25History = [];
 let pm10History = [];
-const MAX_POINTS = 288;
+const MAX_POINTS = 20;
 
 // CO2 Realtime Bar Chart
 const co2RealtimeCtx = document.getElementById('co2Realtime').getContext('2d');
@@ -662,14 +662,14 @@ setInterval(() => {
   pmRealtimeChart.update();
 
   // --- Add to Buffers (sliding window) ---
-// Update sliding buffers
-CO2_BUFFER.push(airData.CO2);
-PM25_BUFFER.push(airData.PM25);
-PM10_BUFFER.push(airData.PM10);
-if (CO2_BUFFER.length > BUFFER_SIZE) {
-  CO2_BUFFER.shift();
-  PM25_BUFFER.shift();
-  PM10_BUFFER.shift();
+  // Update sliding buffers
+  CO2_BUFFER.push(airData.CO2);
+  PM25_BUFFER.push(airData.PM25);
+  PM10_BUFFER.push(airData.PM10);
+  if (CO2_BUFFER.length > BUFFER_SIZE) {
+    CO2_BUFFER.shift();
+    PM25_BUFFER.shift();
+    PM10_BUFFER.shift();
 }
 
 // Compute 5-min averages
@@ -711,4 +711,4 @@ pmStatusEl.className = `status-inline ${pmLevel.class}`;
 
   co2Chart.update();
   pmChart.update();
-}, 10000); // Assuming updates every 10 seconds
+}, 5000); // Assuming updates every 10 seconds

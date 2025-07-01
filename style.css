@@ -16,6 +16,7 @@ body {
   display: flex;
   width: 100%;
   flex-direction: row;
+  justify-content: start;
    
 }
 .date-display {
@@ -125,6 +126,7 @@ nav button:hover {
 .main-content {
   flex-grow: 1;
   padding: 20px;
+  
 }
 
 header {
@@ -162,10 +164,20 @@ header h1 {
 .controls {
   display: flex;
   flex-wrap: wrap;
-  justify-content: start;
-  margin-bottom: 20px;
+  justify-content: flex-start;   
+  align-items: flex-start;
+  gap: 20px; 
+ 
 
 }
+
+.big-cards-ctn{
+  display: flex;
+  flex-wrap: wrap;
+ 
+}
+
+
 
 
 
@@ -251,7 +263,7 @@ header h1 {
 }
 
 
-/* this is belong to modar */
+/*belong to modal */
 .temp-slider {
   width: 100%;
   margin: 10px 0;
@@ -431,7 +443,9 @@ input:checked + .slider:before {
 /* Animate AC Panel when shown */
 .ac-panel {
   display: flex;
-  width: 40%;
+  min-width: 300px;
+  width: 550px;
+  max-width: 650px;
   height: auto;
   justify-content: center;
   align-items: center;
@@ -441,6 +455,7 @@ input:checked + .slider:before {
   transform: translateY(20px);
   animation: fadeInUp 0.5s ease-out forwards;
   margin: auto;
+
 }
 
 @keyframes fadeInUp {
@@ -671,9 +686,8 @@ align-items: center;
 .shutter-ctn.control-card {
   background-color: #ffffff;
   border-radius: 20px;
-  
   width: 500px;
-  height: 420px;
+  height: auto;
   margin: 20px auto;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   font-family: 'Segoe UI', sans-serif;
@@ -1071,11 +1085,12 @@ canvas {
     padding: 10px;
     margin-bottom: 70px; /* leave space for fixed sidebar */
   }
-
+  
 
 
   .controls {
     justify-content: center;
+
 
   }
 
@@ -1148,6 +1163,20 @@ canvas {
 
 
   }
+  .air_quality_container {
+  width: 90%;
+  height: auto;
+  margin: 20px auto;
+  padding: 15px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 }
 
 

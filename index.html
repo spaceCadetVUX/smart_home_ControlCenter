@@ -305,11 +305,9 @@
         </div>
       </section>
 
-
-      <section class="controls">
-        <!-- Air conditioner temperature control and on/off buttons -->
-<!-- Air conditioner temperature control and on/off buttons -->
-<!-- Air conditioner temperature control and on/off buttons -->
+      
+       <!-- optional Cards -->
+      <section class="big-cards-ctn">
         <div class="ac-panel control-card living-room">
           <div class="ac-h2-ctn"><h2>Air Conditioner Control</h2></div>
 
@@ -362,84 +360,85 @@
          
         </div>
 
-<!-- 
-blind -->
-      <div class="shutter-ctn control-card living-room">
-        <div class="ac-h2-ctn"><h2>Window Blind Controller</h2></div>
-        <div class="controller-card">
-          <div class="selector-group">
-            <label for="blindSelector">Select Blind</label>
-            <select id="blindSelector">
-              <option value="living_blind_1">living's Blind 1</option>
-              <option value="living_blind_2">living's Blind 2</option>
-              <option value="living_blind_3">living's Blind 3</option>
-              <option value="living_blind_4">living's blind 4</option>
-              <option value="living_blind_5">living's Blind 5</option>
-              <option value="living_blind_6">living's Blind 6</option>
-              <option value="living_blind_7">living's Blind 7</option>
-            </select>
-          </div>
-          <div class="button-group">
-            <button id="openBtn">Open</button>
-            <button id="closeBtn">Close</button>
-          </div>
+        <!-- 
+        blind -->
+        <div class="shutter-ctn control-card living-room">
+          <div class="ac-h2-ctn"><h2>Window Blind Controller</h2></div>
+          <div class="controller-card">
+            <div class="selector-group">
+              <label for="blindSelector">Select Blind</label>
+              <select id="blindSelector">
+                <option value="living_blind_1">living's Blind 1</option>
+                <option value="living_blind_2">living's Blind 2</option>
+                <option value="living_blind_3">living's Blind 3</option>
+                <option value="living_blind_4">living's blind 4</option>
+                <option value="living_blind_5">living's Blind 5</option>
+                <option value="living_blind_6">living's Blind 6</option>
+                <option value="living_blind_7">living's Blind 7</option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button id="openBtn">Open</button>
+              <button id="closeBtn">Close</button>
+            </div>
 
-          <div class="slider-group">
-            <label for="blindSlider">Opening: <span id="sliderValue">50</span>%</label>
-            <input type="range" id="blindSlider" min="0" max="100" value="50">
+            <div class="slider-group">
+              <label for="blindSlider">Opening: <span id="sliderValue">50</span>%</label>
+              <input type="range" id="blindSlider" min="0" max="100" value="50">
+            </div>
+          </div>
+            <div class="blind-select-all-group">
+                <div class="selector-group-ctn">
+                    <label for="selectAllSwitch">Select All</label>
+                    <label class="switch">
+                      <input type="checkbox" id="selectAllSwitch">
+                      <span class="slider"></span>
+                    </label>
+                </div>
           </div>
         </div>
-          <div class="blind-select-all-group">
-              <div class="selector-group-ctn">
-                  <label for="selectAllSwitch">Select All</label>
-                  <label class="switch">
-                    <input type="checkbox" id="selectAllSwitch">
-                    <span class="slider"></span>
-                  </label>
+
+
+
+          <!-- AIR QUALITY -->
+        <div class="air_quality_container control-card living-room">
+          <h1>Indoor Air Quality</h1>
+          <!-- Row for CO2 -->
+          <div class="chart-row">
+            <div class="chart-block narrow-chart">
+              <div class="chart-header">
+                <h2>CO₂ Real-Time (ppm)</h2>
+                <span id="co2Status" class="status-inline"></span>
               </div>
-        </div>
-      </div>
-
-
-      <div class="air_quality_container control-card living-room">
-        <h1>Indoor Air Quality</h1>
-
-        <!-- Row for CO2 -->
-        <div class="chart-row">
-          <div class="chart-block narrow-chart">
-            <div class="chart-header">
-              <h2>CO₂ Real-Time (ppm)</h2>
-              <span id="co2Status" class="status-inline"></span>
+              <canvas id="co2Realtime"></canvas>
             </div>
-            <canvas id="co2Realtime"></canvas>
+
+            <div class="chart-block wide-chart">
+              <div class="chart-header">
+                <h2>CO₂ History</h2>
+              </div>
+              <canvas id="co2Chart"></canvas>
+            </div>
           </div>
 
-          <div class="chart-block wide-chart">
-            <div class="chart-header">
-              <h2>CO₂ History</h2>
+          <!-- Row for PM -->
+          <div class="chart-row">
+            <div class="chart-block narrow-chart">
+              <div class="chart-header">
+                <h2>PM2.5 & PM10 Real-Time (µg/m³)</h2>
+                <span id="pmStatus" class="status-inline">:</span>
+              </div>
+              <canvas id="pmRealtime"></canvas>
             </div>
-            <canvas id="co2Chart"></canvas>
-          </div>
-        </div>
 
-        <!-- Row for PM -->
-        <div class="chart-row">
-          <div class="chart-block narrow-chart">
-            <div class="chart-header">
-              <h2>PM2.5 & PM10 Real-Time (µg/m³)</h2>
-              <span id="pmStatus" class="status-inline">:</span>
+            <div class="chart-block wide-chart">
+              <div class="chart-header">
+                <h2>PM2.5 & PM10 History</h2>
+              </div>
+              <canvas id="pmChart"></canvas>
             </div>
-            <canvas id="pmRealtime"></canvas>
-          </div>
-
-          <div class="chart-block wide-chart">
-            <div class="chart-header">
-              <h2>PM2.5 & PM10 History</h2>
-            </div>
-            <canvas id="pmChart"></canvas>
           </div>
         </div>
-      </div>
 
 
 
