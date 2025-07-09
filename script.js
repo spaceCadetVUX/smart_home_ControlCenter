@@ -1,3 +1,99 @@
+let isEditingApi = false;
+let isEditingPassword = false;
+
+function saveInfo() {
+  const apiInput = document.getElementById("api");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  const api = apiInput.value;
+  const email = emailInput.value;
+  const password = passwordInput.value;
+
+  if (!email || !password) {
+    alert("Please fill out all required fields.");
+    return;
+  }
+
+  // Save new API only if typed
+  if (api) {
+    localStorage.setItem("api", api);
+    apiInput.value = "";
+    isEditingApi = false;
+  }
+
+  localStorage.setItem("email", email);
+  localStorage.setItem("password", password);
+  isEditingPassword = false;
+
+  updateUIAfterSave();
+  alert("Information saved successfully!");
+}
+
+function toggleApi() {
+  const input = document.getElementById("api");
+  input.type = input.type === "password" ? "text" : "password";
+}
+
+function togglePassword() {
+  const input = document.getElementById("password");
+  input.type = input.type === "password" ? "text" : "password";
+}
+
+function updateUIAfterSave() {
+  // Hide eye icons
+  document.getElementById("toggleApi").style.display = "none";
+  document.getElementById("togglePassword").style.display = "none";
+
+  // Mask password and API input
+  document.getElementById("password").type = "password";
+  document.getElementById("api").type = "password";
+
+  // Show API saved notice
+  updateApiNotice();
+}
+
+function updateApiNotice() {
+  const notice = document.getElementById("apiNotice");
+  const savedApi = localStorage.getItem("api");
+  notice.textContent = savedApi ? "****** (API saved)" : "";
+}
+
+window.onload = function () {
+  const savedEmail = localStorage.getItem("email");
+  const savedPassword = localStorage.getItem("password");
+
+  if (savedEmail) document.getElementById("email").value = savedEmail;
+  if (savedPassword) document.getElementById("password").value = savedPassword;
+
+  updateApiNotice();
+
+  // Eyes only visible if editing
+  document.getElementById("api").addEventListener("input", () => {
+    isEditingApi = true;
+    document.getElementById("toggleApi").style.display = "inline";
+  });
+
+  document.getElementById("password").addEventListener("input", () => {
+    isEditingPassword = true;
+    document.getElementById("togglePassword").style.display = "inline";
+  });
+
+  // Initially hide toggle eyes
+  document.getElementById("toggleApi").style.display = "none";
+  document.getElementById("togglePassword").style.display = "none";
+};
+
+
+
+
+
+
+
+
+
+
+
 /* Add event listeners to all switch inputs to log device status changes */
 document.querySelectorAll('.switch input').forEach(input => {
   input.addEventListener('change', function() {
@@ -31,7 +127,8 @@ const roomClassMap = {
   'dining': 'dining-room',
   'kitchen': 'kitchen-room',
   'bedroom': 'bedroom-room',
-  'garage': 'garage-room'
+  'garage': 'garage-room',
+  'setting': 'setting-part'
 };
 // sidebar selection
 /* Add event listeners to nav buttons to handle active state and switch room views */

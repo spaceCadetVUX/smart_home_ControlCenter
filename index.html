@@ -398,8 +398,6 @@
           </div>
         </div>
 
-
-
           <!-- AIR QUALITY -->
         <div class="air_quality_container control-card living-room">
           <h1>Indoor Air Quality</h1>
@@ -440,6 +438,32 @@
           </div>
         </div>
 
+        <!-- setting-ctn -->
+          <div class="setting_CTN control-card setting-part">
+            
+            <div class="setting-infor-card">
+              <h2>Information Card</h2>
+
+              <label for="api">API</label>
+              <div class="input-container">
+                <input type="password" id="api" placeholder="Enter API Key" />
+          
+              </div>
+              <div id="apiNotice" class="notice"></div>
+
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="Enter Email" />
+
+              <label for="password">Password</label>
+              <div class="input-container">
+                <input type="password" id="password" placeholder="Enter Password" />
+  
+              </div>
+
+              <button onclick="saveInfo()">Save</button>
+            </div>
+
+          </div>
 
 
       </section>
@@ -456,6 +480,9 @@
           <input type="range" min="0" max="100" step="1" value="50" id="modal-dim-slider">
         </div>
       </div>
+
+
+
 
   <script src="script.js"></script>
 </body>
