@@ -60,7 +60,7 @@ function updateApiNotice() {
   notice.textContent = savedApi ? "****** (API saved)" : "";
 }
 
-window.onload = function () {
+window.onload = async function () {
   const savedEmail = localStorage.getItem("email");
   const savedPassword = localStorage.getItem("password");
   const savedApi = localStorage.getItem("api");
@@ -84,29 +84,8 @@ window.onload = function () {
   document.getElementById("toggleApi").style.display = "none";
   document.getElementById("togglePassword").style.display = "none";
 
-  // ✅ If credentials exist, check for session or fetch one
   if (savedApi && savedEmail && savedPassword) {
-    const rawSession = localStorage.getItem("sessionData");
-
-    if (rawSession) {
-      try {
-        const sessionData = JSON.parse(rawSession);
-        const age = Date.now() - sessionData.timestamp;
-
-        if (sessionData.sessionId && age < SESSION_VALIDITY_MS) {
-          consoleEl.textContent = "🟢 Using cached session:\n" + JSON.stringify(sessionData, null, 2);
-        } else {
-          consoleEl.textContent = "⚠️ Session expired. Fetching new session...";
-          getCasambiSession(true); // force fetch
-        }
-      } catch (e) {
-        consoleEl.textContent = "❌ Session corrupted. Fetching new one...";
-        getCasambiSession(true);
-      }
-    } else {
-      consoleEl.textContent = "ℹ️ No session stored. Fetching new session...";
-      getCasambiSession(true); // fetch new one
-    }
+    await startSessionAndWebSocket();  // ✅ use the async wrapper
   } else {
     consoleEl.textContent = "❌ Missing credentials. Please save API, Email, and Password.";
   }
@@ -114,26 +93,35 @@ window.onload = function () {
 
 
 
-// get sissionID
-const SESSION_VALIDITY_MS = 1000 * 60 * 30; // assume 30 minutes validity
+let sessionDataToStore = null;
+let socket = null;
+const wire = 1;
+const SESSION_VALIDITY_MS = 1000 * 60 * 30; // 30 minutes
 
+// 🧠 Console Logger
+function logToConsole(message, data = null) {
+  const consoleEl = document.getElementById("consoleContent");
+  const line = document.createElement("div");
+  line.textContent = data ? `${message}: ${JSON.stringify(data)}` : message;
+  consoleEl.appendChild(line);
+  consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+
+// 📡 Get Casambi Session
 async function getCasambiSession(force = false) {
   const api = localStorage.getItem("api");
   const email = localStorage.getItem("email");
   const password = localStorage.getItem("password");
 
-  const consoleEl = document.getElementById("console");
-
   if (!api || !email || !password) {
-    consoleEl.textContent = "❌ Missing API/Email/Password. Please save first.";
+    logToConsole("❌ Missing API/Email/Password. Please save first.");
     return;
   }
 
-  // Check if session is already stored and valid
-  const sessionData = JSON.parse(localStorage.getItem("sessionData") || "{}");
-
-  if (!force && sessionData.sessionId && Date.now() - sessionData.timestamp < SESSION_VALIDITY_MS) {
-    consoleEl.textContent = "✅ Cached Session:\n" + JSON.stringify(sessionData, null, 2);
+  const localSession = JSON.parse(localStorage.getItem("sessionData") || "{}");
+  if (!force && localSession.sessionId && Date.now() - localSession.timestamp < SESSION_VALIDITY_MS) {
+    sessionDataToStore = localSession;
+    logToConsole("✅ Using cached session.");
     return;
   }
 
@@ -146,7 +134,7 @@ async function getCasambiSession(force = false) {
 
     if (!res.ok) {
       const errorText = await res.text();
-      consoleEl.textContent = "❌ Error getting session:\n" + errorText;
+      logToConsole("❌ Error getting session", errorText);
       return;
     }
 
@@ -154,46 +142,119 @@ async function getCasambiSession(force = false) {
     const networkId = Object.keys(data)[0];
     const sessionId = data[networkId].sessionId;
 
-    // Save session info in localStorage
-    const sessionDataToStore = {
+    sessionDataToStore = {
       sessionId,
       networkId,
       timestamp: Date.now(),
       fullData: data
     };
     localStorage.setItem("sessionData", JSON.stringify(sessionDataToStore));
-
-    consoleEl.textContent = "✅ Casambi Session Info:\n" + JSON.stringify(sessionDataToStore, null, 2);
+    logToConsole("✅ New session stored.");
   } catch (err) {
-    consoleEl.textContent = "⚠️ Failed to fetch session:\n" + err.message;
+    logToConsole("⚠️ Failed to fetch session", err.message);
   }
 }
 
+// 🔌 WebSocket Connection
+function initCasambiWebSocket() {
+  const api_key = localStorage.getItem("api");
 
-function refreshConsole() {
-  const consoleEl = document.getElementById("console");
-  const rawSession = localStorage.getItem("sessionData");
+  if (!sessionDataToStore || !api_key) {
+    logToConsole("❌ Cannot open WebSocket. Missing session or API key.");
+    return;
+  }
 
-  if (rawSession) {
-    try {
-      const sessionData = JSON.parse(rawSession);
-      const SESSION_VALIDITY_MS = 1000 * 60 * 30;
-      const age = Date.now() - sessionData.timestamp;
+  const session_id = sessionDataToStore.sessionId;
+  const network_id = sessionDataToStore.networkId;
 
-      if (sessionData.sessionId && age < SESSION_VALIDITY_MS) {
-        consoleEl.textContent = "🟢 Cached session is valid:\n" + JSON.stringify(sessionData, null, 2);
-      } else {
-        consoleEl.textContent = "⚠️ Cached session expired. Getting new session...";
-        getCasambiSession(); // This will update the console automatically
-      }
-    } catch (e) {
-      consoleEl.textContent = "❌ Error reading cached session. Fetching new one...";
-      getCasambiSession();
-    }
-  } else {
-    consoleEl.textContent = "ℹ️ No session found. Please click 'Get Session ID'.";
+  if (!socket) {
+    socket = new WebSocket("wss://door.casambi.com/v1/bridge/", api_key);
+    logToConsole("🔌 Connecting to Casambi WebSocket...");
+
+    socket.onopen = function () {
+      logToConsole("✅ WebSocket connected.");
+      sendWireOpenMessage(network_id, session_id);
+    };
+
+    socket.onmessage = function (msg) {
+      new Response(msg.data).text().then(result => {
+        const data = JSON.parse(result);
+        logToConsole("📩 Message", data);
+
+        if (data.wireStatus === "openWireSucceed") {
+          logToConsole("🔓 Wire opened successfully.");
+          sendPingMessage();
+        } else if (data.response === "pong") {
+          logToConsole("🏓 Pong received.");
+        } else if (data.method === "unitChanged") {
+          logToConsole("💡 Unit changed", data);
+        } else if (data.method === "peerChanged" && !data.online) {
+          logToConsole("⚠️ Peer offline", data);
+        }
+      }).catch(err => {
+        logToConsole("❌ Parse error", err);
+      });
+    };
+
+    socket.onerror = function (err) {
+      logToConsole("❗ WebSocket error", err);
+      socket = null;
+      setTimeout(() => initCasambiWebSocket(), 2000);
+    };
+
+    socket.onclose = function () {
+      logToConsole("🔌 WebSocket closed.");
+      socket = null;
+      setTimeout(() => initCasambiWebSocket(), 2000);
+    };
   }
 }
+
+// 🔓 Wire Open
+function sendWireOpenMessage(network_id, session_id) {
+  const data = {
+    method: "open",
+    id: network_id,
+    session: session_id,
+    ref: "casambi-ref",
+    wire: wire,
+    type: 1
+  };
+  socket.send(JSON.stringify(data));
+  logToConsole("📤 Sent wire open.");
+}
+
+// 🏓 Ping
+function sendPingMessage() {
+  const data = {
+    wire: wire,
+    method: "ping"
+  };
+  socket.send(JSON.stringify(data));
+  logToConsole("📤 Sent ping.");
+}
+
+// 👆 Connect Button Handler
+document.getElementById("connectBtn").addEventListener("click", async (e) => {
+  logToConsole("🔄 Getting session and connecting...");
+
+  await getCasambiSession(); // 👈 This fetches or restores the session
+
+  // ✅ Print the sessionDataToStore to your custom console
+  logToConsole("📦 Session Data", sessionDataToStore);
+
+  // ✅ Then connect to Casambi WebSocket
+  initCasambiWebSocket();
+
+  // Optional: disable button after connecting
+  // e.target.disabled = true;
+  // e.target.textContent = "✅ Connected";
+});
+
+
+
+
+
 
 
 function toggleConsole() {
@@ -206,7 +267,77 @@ function toggleConsole() {
 }
 
 
+// Make the console draggable
+// (function makeConsoleDraggable() {
+//   const el = document.getElementById("console");
+//   let offsetX = 0, offsetY = 0;
+//   let isDragging = false;
 
+//   el.addEventListener("mousedown", (e) => {
+//     // Don't drag if user is selecting text
+//     const selection = window.getSelection();
+//     if (selection && selection.toString().length > 0) return;
+
+//     isDragging = true;
+//     offsetX = e.clientX - el.offsetLeft;
+//     offsetY = e.clientY - el.offsetTop;
+//     document.body.style.userSelect = "none";
+//   });
+
+//   document.addEventListener("mouseup", () => {
+//     isDragging = false;
+//     document.body.style.userSelect = "auto";
+//   });
+
+//   document.addEventListener("mousemove", (e) => {
+//     if (!isDragging) return;
+//     el.style.left = (e.clientX - offsetX) + "px";
+//     el.style.top = (e.clientY - offsetY) + "px";
+//     el.style.right = "auto"; // enable horizontal movement
+//   });
+// })();
+
+function updateRGBTWAndPower(deviceId, values) {
+  const wire = 1;
+
+  const targetControls = {
+    "slider0": { value: values.R },   // R
+    "slider1": { value: values.G },   // G
+    "slider2": { value: values.B },   // B
+    "slider3": { value: values.T },   // T
+    "slider4": { value: values.W },   // W
+    "onoff0":  { value: values.OnOff ? 1 : 0 } // 1 = On, 0 = Off
+  };
+
+  const data = JSON.stringify({
+    wire,
+    method: "controlUnit",
+    id: deviceId,
+    targetControls
+  });
+
+  if (socket && socket.readyState === WebSocket.OPEN) {
+    socket.send(decodeURIComponent(escape(data)));
+    logToConsole("📤 Sent controlUnit update", targetControls);
+  } else {
+    logToConsole("❌ WebSocket is not connected.");
+  }
+}
+
+document.getElementById("sendControlBtn").addEventListener("click", () => {
+  const deviceId = 4; // Replace with your actual device ID
+
+  const values = {
+    R: 50,     // Red (slider0)
+    G: 75,     // Green (slider1)
+    B: 25,     // Blue (slider2)
+    T: 10,     // Temp (slider3)
+    W: 90,     // White (slider4)
+    OnOff: true // onoff0
+  };
+
+  updateRGBTWAndPower(deviceId, values);
+});
 
 
 
@@ -299,7 +430,7 @@ document.querySelector('nav button.active')?.click();
 // Store lamp states
 const lampStates = {
   // living
-  'celling-lamp-lv': {status: "on", temp: 3000, dim: 50,tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'celling-lamp-lv': {status: "on", temp: 1000, dim: 50,tempMin: 2700, tempMax: 16000, tempStep: 1 },
   'floor-lamp-lv': {status: "off", temp: 2700, dim: 60,tempMin: 2700, tempMax: 3000, tempStep: 1 },
   'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70,tempMin: 2700, tempMax: 3000, tempStep: 1 },
   'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },

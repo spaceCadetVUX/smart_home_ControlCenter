@@ -440,58 +440,38 @@
 
         <!-- setting-ctn -->
           <div class="setting_CTN control-card setting-part">
-            
             <div class="setting-infor-card">
               <h2>Information Card</h2>
-
               <label for="api">API</label>
               <div class="input-container">
                 <input type="password" id="api" placeholder="Enter API Key" />
-          
               </div>
               <div id="apiNotice" class="notice"></div>
-
               <label for="email">Email</label>
               <input type="email" id="email" placeholder="Enter Email" />
-
               <label for="password">Password</label>
               <div class="input-container">
                 <input type="password" id="password" placeholder="Enter Password" />
-  
               </div>
-
               <button onclick="saveInfo()">Save</button>
-              <button onclick="getCasambiSession(true)">🔁 Refresh Session</button>
-              <button onclick="refreshConsole()">🔁 Refresh Console</button>
+              <button id="connectBtn">🔌 Connect to Casambi</button>
+
               <button onclick="toggleConsole()">Show/Hide Console</button>
+              <button id="sendControlBtn">🎛️ Send RGBTW + Power</button>
 
 
-
+            
 
 
             </div>
-
-<div class="setting_CTN setting-part" id="console" style="display: none;
-  white-space: pre-wrap;
-  background: #111;
-  color: #0f0;
-  padding: 1em;
-  margin-top: 1em;
- 
-  overflow-y: auto;
-  border: 1px solid #0f0;
-  width: 400px;
-  height: 600px;
-  position: absolute;
-  top: 100px;
-  right: -600px;">
-  
-  Console output...
-</div>
-
-
-
           </div>
+
+
+            <div id="console" >
+              <div id="consoleHeader">🧠 Console</div>
+              <div id="consoleContent">Console output...</div>
+              
+            </div>
 
 
       </section>

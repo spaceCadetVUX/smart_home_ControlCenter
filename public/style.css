@@ -1012,6 +1012,53 @@ canvas {
   margin-top: 5px;
 }
 
+.consolelog{
+  background-color: #0056b3;
+}
+
+#console {
+  position: absolute;
+  top: 100px;
+  left: 600px;
+  width: 400px;
+  height: 600px;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  border: 1px solid rgb(253, 255, 253);
+  z-index: 999;
+  font-family: monospace;
+  user-select: text;
+  display: none;
+  padding: 0; /* 💡 Set to 0 so internal content controls padding */
+  box-sizing: border-box;
+  overflow: hidden; /* Keep this */
+}
+
+#consoleHeader {
+  height: 40px; /* Slightly taller for consistency */
+  line-height: 30px;
+  background-color: #222;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  cursor: move;
+  user-select: none;
+  border-bottom: 1px solid #0f0;
+  box-sizing: border-box;
+}
+
+#consoleContent {
+  height: calc(100% - 40px); /* Adjusted to match header height */
+  padding: 10px;
+  overflow-y: auto;
+  white-space: pre-wrap; /* ✅ Prevent text from running off horizontally */
+  word-wrap: break-word;  /* ✅ Word break for long strings */
+  box-sizing: border-box;
+}
+
+
+
+
 
 
 /* 🌐 Responsive Layout for Tablets and Phones */
