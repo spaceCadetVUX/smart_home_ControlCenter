@@ -1019,8 +1019,8 @@ canvas {
 #console {
   position: absolute;
   top: 100px;
-  left: 600px;
-  width: 400px;
+  left: 900px;
+  width: 700px;
   height: 600px;
   background-color: #ffffff;
   color: rgb(0, 0, 0);
@@ -1057,7 +1057,15 @@ canvas {
 }
 
 
+input[type="range"] {
+  transition: all 0.3s ease-in-out;
+}
 
+
+.silder_test_ctn{
+  padding: 10px;
+  height: auto;
+}
 
 
 

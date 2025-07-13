@@ -93,11 +93,6 @@ window.onload = async function () {
 
 
 
-let sessionDataToStore = null;
-let socket = null;
-const wire = 1;
-const SESSION_VALIDITY_MS = 1000 * 60 * 30; // 30 minutes
-
 // 🧠 Console Logger
 function logToConsole(message, data = null) {
   const consoleEl = document.getElementById("consoleContent");
@@ -107,7 +102,19 @@ function logToConsole(message, data = null) {
   consoleEl.scrollTop = consoleEl.scrollHeight;
 }
 
+
+
+
+
+let sessionDataToStore = null;
+let deviceInfo = null; // 🌐 Global deviceInfo
+let socket = null;
+const wire = 1;
+const SESSION_VALIDITY_MS = 1000 * 60 * 30; // 30 minutes
+
+
 // 📡 Get Casambi Session
+
 async function getCasambiSession(force = false) {
   const api = localStorage.getItem("api");
   const email = localStorage.getItem("email");
@@ -119,12 +126,32 @@ async function getCasambiSession(force = false) {
   }
 
   const localSession = JSON.parse(localStorage.getItem("sessionData") || "{}");
+
+  // ✅ Use cached session if still valid
   if (!force && localSession.sessionId && Date.now() - localSession.timestamp < SESSION_VALIDITY_MS) {
     sessionDataToStore = localSession;
     logToConsole("✅ Using cached session.");
+
+    const { networkId, fullData } = localSession;
+    deviceInfo = fullData ? fullData[networkId] : null; // ✅ assign to global
+
+    if (deviceInfo) {
+      const { id, address, name } = deviceInfo;
+
+      logToConsole("🧩 Cached Device Info");
+      logToConsole(`Session ID: ${localSession.sessionId}`);
+      logToConsole(`Network ID: ${networkId}`);
+      logToConsole(`Device ID: ${id}`);
+      logToConsole(`Address: ${address}`);
+      logToConsole(`Name: ${name}`);
+    } else {
+      logToConsole("⚠️ No device info available in cached session.");
+    }
+
     return;
   }
 
+  // ✅ Fetch a new session if forced or expired
   try {
     const res = await fetch("/getSession", {
       method: "POST",
@@ -140,7 +167,9 @@ async function getCasambiSession(force = false) {
 
     const data = await res.json();
     const networkId = Object.keys(data)[0];
-    const sessionId = data[networkId].sessionId;
+    deviceInfo = data[networkId]; // ✅ assign to global
+    const sessionId = deviceInfo.sessionId;
+    const { id, address, name } = deviceInfo;
 
     sessionDataToStore = {
       sessionId,
@@ -148,17 +177,30 @@ async function getCasambiSession(force = false) {
       timestamp: Date.now(),
       fullData: data
     };
+
     localStorage.setItem("sessionData", JSON.stringify(sessionDataToStore));
     logToConsole("✅ New session stored.");
+
+    logToConsole("🧩 New Device Info");
+    logToConsole(`Session ID: ${sessionId}`);
+    logToConsole(`Network ID: ${networkId}`);
+    logToConsole(`Device ID: ${id}`);
+    logToConsole(`Address: ${address}`);
+    logToConsole(`Name: ${name}`);
   } catch (err) {
     logToConsole("⚠️ Failed to fetch session", err.message);
   }
 }
 
+
+
+
+
+let messageLog = []; // 🧾 Stores only the latest relevant message
+
 // 🔌 WebSocket Connection
 function initCasambiWebSocket() {
   const api_key = localStorage.getItem("api");
-
   if (!sessionDataToStore || !api_key) {
     logToConsole("❌ Cannot open WebSocket. Missing session or API key.");
     return;
@@ -179,18 +221,7 @@ function initCasambiWebSocket() {
     socket.onmessage = function (msg) {
       new Response(msg.data).text().then(result => {
         const data = JSON.parse(result);
-        logToConsole("📩 Message", data);
-
-        if (data.wireStatus === "openWireSucceed") {
-          logToConsole("🔓 Wire opened successfully.");
-          sendPingMessage();
-        } else if (data.response === "pong") {
-          logToConsole("🏓 Pong received.");
-        } else if (data.method === "unitChanged") {
-          logToConsole("💡 Unit changed", data);
-        } else if (data.method === "peerChanged" && !data.online) {
-          logToConsole("⚠️ Peer offline", data);
-        }
+        handleNewMessage(data); // ✅ Process the incoming message
       }).catch(err => {
         logToConsole("❌ Parse error", err);
       });
@@ -209,6 +240,112 @@ function initCasambiWebSocket() {
     };
   }
 }
+
+// 🧠 Handle new message
+function handleNewMessage(data) {
+  // ✅ Only log and store if it's a "unitChanged" type (or similar expected structure)
+  if (data.method === "unitChanged" && data.address && data.controls) {
+    messageLog.length = 0;      // 🔄 Clear previous
+    messageLog.push(data);      // ✅ Store latest
+    logToConsole("🧾 Latest Message Log", messageLog);
+    logToConsole("🆔 Latest message ID", data.id ?? "N/A");
+  }
+    // 🟢 Update Red slider value from message
+  updateSlidersFromMessageLog();
+  // ✅ Handle system-level events regardless
+  if (data.wireStatus === "openWireSucceed") {
+    logToConsole("🔓 Wire opened successfully.");
+    sendPingMessage();
+  } else if (data.response === "pong") {
+    logToConsole("🏓 Pong received.");
+  } else if (data.method === "peerChanged" && !data.online) {
+    logToConsole("⚠️ Peer offline");
+  }
+}
+
+
+
+// Get the latest ID (Unit ID)   just call 
+function getLatestMessageId() {
+  if (messageLog.length > 0 && messageLog[0].id !== undefined) {
+    return messageLog[0].id;
+  } else {
+    return "No ID available";
+  }
+}
+// show unit ID - button event
+document.getElementById("showIdBtn").addEventListener("click", () => {
+  const id = getLatestMessageId();
+  logToConsole(id); // ✅ Only shows: 4 (no label or emoji)
+});
+
+// show all mess log - button event
+document.getElementById("showAllMessagesBtn").addEventListener("click", () => {
+  logToConsole("📄 Current MessageLog", messageLog);
+});
+
+
+
+function updateSlidersFromMessageLog() {
+  const controlMap = {
+    R: { sliderId: "redSlider", valueId: "redValue" },
+    G: { sliderId: "greenSlider", valueId: "greenValue" },
+    B: { sliderId: "blueSlider", valueId: "blueValue" },
+    T: { sliderId: "tempSlider", valueId: "tempValueT" },
+    W: { sliderId: "whiteSlider", valueId: "whiteValue" }
+  };
+
+  if (messageLog.length === 0) return;
+
+  const controls = messageLog[0].controls;
+  if (!Array.isArray(controls)) return;
+
+  controls.forEach(control => {
+    const label = control.label;
+    const match = controlMap[label];
+    if (match) {
+      const slider = document.getElementById(match.sliderId);
+      const valueDisplay = document.getElementById(match.valueId);
+      if (slider && valueDisplay) {
+        const rounded = Math.round(control.value);
+        slider.value = rounded;
+        valueDisplay.textContent = rounded;
+      }
+    }
+  });
+}
+
+
+function getRedControl() {
+  if (messageLog.length === 0) return null;
+  const controls = messageLog[0].controls;
+  if (!Array.isArray(controls)) return null;
+  return controls.find(control => control.label === "R");
+}
+
+
+
+
+// testing btn
+document.getElementById("testing").addEventListener("click", () => {
+  const redControl = getRedControl();
+  logToConsole("🔴 Red Control:", redControl);
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // 🔓 Wire Open
 function sendWireOpenMessage(network_id, session_id) {
@@ -257,6 +394,12 @@ document.getElementById("connectBtn").addEventListener("click", async (e) => {
 
 
 
+
+
+
+
+
+
 function toggleConsole() {
   const consoleEl = document.getElementById("console");
   if (consoleEl.style.display === "none") {
@@ -296,51 +439,6 @@ function toggleConsole() {
 //     el.style.right = "auto"; // enable horizontal movement
 //   });
 // })();
-
-function updateRGBTWAndPower(deviceId, values) {
-  const wire = 1;
-
-  const targetControls = {
-    "slider0": { value: values.R },   // R
-    "slider1": { value: values.G },   // G
-    "slider2": { value: values.B },   // B
-    "slider3": { value: values.T },   // T
-    "slider4": { value: values.W },   // W
-    "onoff0":  { value: values.OnOff ? 1 : 0 } // 1 = On, 0 = Off
-  };
-
-  const data = JSON.stringify({
-    wire,
-    method: "controlUnit",
-    id: deviceId,
-    targetControls
-  });
-
-  if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(decodeURIComponent(escape(data)));
-    logToConsole("📤 Sent controlUnit update", targetControls);
-  } else {
-    logToConsole("❌ WebSocket is not connected.");
-  }
-}
-
-document.getElementById("sendControlBtn").addEventListener("click", () => {
-  const deviceId = 4; // Replace with your actual device ID
-
-  const values = {
-    R: 50,     // Red (slider0)
-    G: 75,     // Green (slider1)
-    B: 25,     // Blue (slider2)
-    T: 10,     // Temp (slider3)
-    W: 90,     // White (slider4)
-    OnOff: true // onoff0
-  };
-
-  updateRGBTWAndPower(deviceId, values);
-});
-
-
-
 
 
 
