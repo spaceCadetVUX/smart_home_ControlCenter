@@ -442,6 +442,49 @@ function toggleConsole() {
 
 
 
+function sendControl(label, value) {
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    logToConsole("❌ WebSocket not connected.");
+    return;
+  }
+
+  const unitId = getLatestMessageId(); // assumes ID from message
+  if (!unitId || unitId === "No ID available") {
+    logToConsole("⚠️ No valid unit ID.");
+    return;
+  }
+
+  const controlMsg = {
+    wire,
+    method: "controlUnit",
+    id: unitId,
+    targetControls: {
+      [label]: { value: value }
+    }
+  };
+
+  socket.send(JSON.stringify(controlMsg));
+  logToConsole(`🎛️ Sent ${label} = ${value}`);
+}
+
+
+["R", "G", "B", "T", "W"].forEach(label => {
+  const sliderId = {
+    R: "redSlider",
+    G: "greenSlider",
+    B: "blueSlider",
+    T: "tempSlider",
+    W: "whiteSlider"
+  }[label];
+
+  const slider = document.getElementById(sliderId);
+  if (slider) {
+    slider.addEventListener("input", () => {
+      const val = parseInt(slider.value);
+      sendControl(label, val);
+    });
+  }
+});
 
 
 
