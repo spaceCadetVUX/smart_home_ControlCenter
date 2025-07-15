@@ -492,6 +492,9 @@
                     <input type="range" id="whiteSlider" min="0" max="100" step="1" />
                     <span id="whiteValue">0</span>
                 </div>
+               <input type="number" id="pm25Input" placeholder="Enter PM2.5 value" />
+<button id="updatePm25Btn">Update $sensor_pm25</button>
+
           </div>
 
 
@@ -504,14 +507,30 @@
         <div class="modal-content">
           <span class="close-button" id="modal-close">&times;</span>
           <h4>Adjust Settings</h4>
+          <!-- temp -->
           <label>Temperature: <span id="modal-temp-value">2800</span>K</label>
           <input type="range" min="2700" max="3000" step="10" value="2800" id="modal-temp-slider">
+          <!-- dim -->  
           <label>Brightness: <span id="modal-dim-value">50</span>%</label>
           <input type="range" min="0" max="100" step="1" value="50" id="modal-dim-slider">
+          <!-- hue -->
+          <label>Hue: <span id="modal-hue-value">180</span>°</label>
+          <input type="range" min="0" max="360" step="1" value="180" id="modal-hue-slider">
+
+          <!-- saturation -->
+          <label>Saturation: <span id="modal-saturation-value">50%</span></label>
+          <input type="range" min="0" max="100" step="1" value="50" id="modal-saturation-slider" />
+
+          <!-- color table -->
+          <div class="color-map-container">
+            <canvas id="drawColorMap" width="400" height="159"></canvas>
+            <div id="colormap-picker"></div>
+              <div id="color-preview"></div>
+          </div>
         </div>
       </div>
 
-        <div id="console" >
+      <div id="console" >
         <div id="consoleHeader">🧠 Console</div>
         <div id="consoleContent">Console output...</div>
       </div>

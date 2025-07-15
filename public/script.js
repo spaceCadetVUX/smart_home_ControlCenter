@@ -492,6 +492,44 @@ function sendControl(label, value) {
 
 
 
+document.getElementById("updatePm25Btn").addEventListener("click", () => {
+  const input = document.getElementById("pm25Input");
+  const value = parseFloat(input.value);
+
+  if (isNaN(value)) {
+    logToConsole("⚠️ Invalid number for PM2.5 value.");
+    return;
+  }
+
+  sendSensorValue("$sensor_pm25", value);
+});
+
+function sendSensorValue(sensorLabel, value) {
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    logToConsole("❌ WebSocket not connected.");
+    return;
+  }
+
+  const unitId = getLatestMessageId();
+  if (!unitId || unitId === "No ID available") {
+    logToConsole("⚠️ No valid unit ID.");
+    return;
+  }
+
+  const sensorMsg = {
+    wire,
+    method: "controlUnit",
+    id: unitId,
+    targetControls: {
+      [sensorLabel]: { value: value }
+    }
+  };
+
+  socket.send(JSON.stringify(sensorMsg));
+  logToConsole(`🌡️ Sent ${sensorLabel} = ${value}`);
+}
+
+
 
 
 
@@ -569,34 +607,35 @@ document.querySelector('nav button.active')?.click();
 
 
 // Store lamp states
+// ...existing code...
 const lampStates = {
   // living
-  'celling-lamp-lv': {status: "on", temp: 1000, dim: 50,tempMin: 2700, tempMax: 16000, tempStep: 1 },
-  'floor-lamp-lv': {status: "off", temp: 2700, dim: 60,tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70,tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'celling-lamp-lv': {status: "on", temp: 1000, dim: 50, tempMin: 2700, tempMax: 16000, tempStep: 1, hue: 0, saturation: 0 },
+  'floor-lamp-lv': {status: "off", temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
 
   // dinning
-  'chandelier-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
-  'Wall-Sconce-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1 },
+  'chandelier-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Wall-Sconce-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
 
   //  kitchen
-   'Recessed-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Cabinet-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Pendant-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Track-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Recessed-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Cabinet-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Pendant-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Track-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
 
   // Bedroom 
-  'Ceiling-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Bedside-Lamp-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
-  'Smart-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1 },
+  'Ceiling-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Bedside-Lamp-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Smart-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
   
   //Garageep
-  'LED-Ceiling-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
-  'otion-Sensor-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
-  'Task-Lighting-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1 },
-
+  'LED-Ceiling-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
+  'otion-Sensor-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
+  'Task-Lighting-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
 };
+//
 
 window.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('input[type="checkbox"][data-id]').forEach(input => {
@@ -802,69 +841,33 @@ updateSliderUI(slider.value);
 
 
 
-// sending
-
-const IP = 'http://192.168.1.106:8081'; // Your ESP32 IP
-
-// Debounce storage per lamp
-const debounceTimers = {};
-
-function sendLampUpdate(lampId, useDebounce = true) {
-  const lamp = lampStates[lampId];
-  if (!lamp) return;
-
-  const payload = [{
-    id: lampId,
-    name: lampId.replace(/-/g, ' '),
-    status: lamp.status,
-    temp: lamp.temp,
-    dim: lamp.dim
-  }];
-
-  const sendRequest = () => {
-    fetch(`${IP}/lamp-status`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
-      .then(res => res.text())
-      .then(msg => console.log("ESP32 Response:", msg))
-      .catch(err => console.error("ESP32 Error:", err));
-  };
-
-  if (useDebounce) {
-    clearTimeout(debounceTimers[lampId]);
-    debounceTimers[lampId] = setTimeout(sendRequest, 80); // 🔁 real-time feel, safe delay
-  } else {
-    sendRequest();
-  }
-}
 
 
-// Called when switch is toggled
-function sendSwitchStatus(checkbox) {
-  const lampId = checkbox.getAttribute('data-id');
-  const status = checkbox.checked ? 'on' : 'off';
-
-  if (lampStates[lampId]) {
-    lampStates[lampId].status = status;
-    sendLampUpdate(lampId, false); // send immediately on toggle
-  } else {
-    console.warn(`Lamp ID "${lampId}" not found in lampStates.`);
-  }
-}
 
 
+
+// ...existing code...
 
 // modal
-
 const modal = document.getElementById("universal-modal");
 const modalCloseBtn = document.getElementById("modal-close");
+
 const modalTempSlider = document.getElementById("modal-temp-slider");
 const modalDimSlider = document.getElementById("modal-dim-slider");
+
 const modalTempValue = document.getElementById("modal-temp-value");
 const modalDimValue = document.getElementById("modal-dim-value");
+
+const modalHueSlider = document.getElementById("modal-hue-slider");
+const modalSaturationSlider = document.getElementById("modal-saturation-slider");
+
+const modalHueValue = document.getElementById("modal-hue-value");
+const modalSaturationValue = document.getElementById("modal-saturation-value");
+
+
+
 let currentLampId = null;
+
 // Open modal on gear icon click
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
@@ -882,17 +885,23 @@ document.querySelectorAll('.gear-icon').forEach(icon => {
     modalDimSlider.value = lamp.dim;
     modalTempValue.textContent = lamp.temp;
     modalDimValue.textContent = lamp.dim;
+    modalHueSlider.value = lamp.hue;
+    modalSaturationSlider.value = lamp.saturation;
+    modalHueValue.textContent = lamp.hue;
+    modalSaturationValue.textContent = lamp.saturation + "%";
 
     // Show modal
     modal.style.display = 'block';
     requestAnimationFrame(() => modal.classList.add('show'));
   });
 });
+
 // Close modal
 modalCloseBtn.addEventListener('click', () => {
   modal.classList.remove('show');
   setTimeout(() => modal.style.display = 'none', 500);
 });
+
 modalTempSlider.addEventListener('input', () => {
   const value = parseInt(modalTempSlider.value);
   modalTempValue.textContent = value;
@@ -923,7 +932,172 @@ modalDimSlider.addEventListener('input', () => {
   }
 });
 
-// Initialize all control card displays with correct temp and dim values on page load
+modalHueSlider.addEventListener('input', () => {
+  const value = parseInt(modalHueSlider.value);
+  modalHueValue.textContent = value;
+
+  if (currentLampId) {
+    lampStates[currentLampId].hue = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+    if (card) {
+      card.querySelector('.hue-value').textContent = value;
+    }
+
+    sendLampUpdate(currentLampId);
+  }
+});
+modalSaturationSlider.addEventListener('input', () => {
+  const value = parseInt(modalSaturationSlider.value);
+  modalSaturationValue.textContent = value + "%";
+
+  if (currentLampId) {
+    lampStates[currentLampId].saturation = value;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+    if (card) {
+      const satSpan = card.querySelector('.saturation-value');
+      if (satSpan) satSpan.textContent = value + "%";
+    }
+
+    sendLampUpdate(currentLampId);
+  }
+});
+
+
+const canvas = document.getElementById('drawColorMap');
+const ctx = canvas.getContext('2d');
+const picker = document.getElementById('colormap-picker');
+
+let isDragging = false;
+
+// ====== 🎨 Draw Hue-Saturation Map ======
+function drawColorMap() {
+  const width = canvas.width;
+  const height = canvas.height;
+
+  const hueGradient = ctx.createLinearGradient(0, 0, width, 0);
+  for (let i = 0; i <= 360; i += 60) {
+    hueGradient.addColorStop(i / 360, `hsl(${i}, 100%, 50%)`);
+  }
+
+  ctx.fillStyle = hueGradient;
+  ctx.fillRect(0, 0, width, height);
+
+  const satGradient = ctx.createLinearGradient(0, 0, 0, height);
+  satGradient.addColorStop(0, "rgba(255,255,255,0)");
+  satGradient.addColorStop(1, "rgba(255, 252, 252, 1)");
+
+  ctx.fillStyle = satGradient;
+  ctx.fillRect(0, 0, width, height);
+}
+
+drawColorMap();
+
+// ====== 🎯 Move Picker Knob ======
+function movePicker(x, y) {
+  // Clamp picker position so it stays inside the canvas
+  const pickerRadius = 7; // adjust if your picker is larger/smaller
+  const minX = pickerRadius;
+  const minY = pickerRadius;
+  const maxX = canvas.width - pickerRadius;
+  const maxY = canvas.height - pickerRadius;
+
+  const clampedX = Math.max(minX, Math.min(maxX, x));
+  const clampedY = Math.max(minY, Math.min(maxY, y));
+
+  picker.style.left = `${clampedX - pickerRadius}px`;
+  picker.style.top = `${clampedY - pickerRadius}px`;
+  picker.style.display = "block";
+}
+
+function updateColorPreview(hue, saturation) {
+  // Use HSL for preview color
+  const preview = document.getElementById('color-preview');
+  preview.style.background = `hsl(${hue}, ${saturation}%, 50%)`;
+}
+
+// ====== 📈 Update Sliders from Canvas Pick ======
+function pickColorFromCanvas(x, y) {
+  const hue = Math.round((x / canvas.width) * 360);
+  const saturation = Math.round((1 - y / canvas.height) * 100);
+
+  modalHueSlider.value = hue;
+  modalSaturationSlider.value = saturation;
+
+  modalHueValue.textContent = hue;
+  modalSaturationValue.textContent = `${saturation}%`;
+  
+  updateColorPreview(hue, saturation); 
+
+  if (currentLampId) {
+    lampStates[currentLampId].hue = hue;
+    lampStates[currentLampId].saturation = saturation;
+
+    const card = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+    if (card) {
+      card.querySelector('.hue-value').textContent = hue;
+      card.querySelector('.saturation-value').textContent = `${saturation}%`;
+    }
+
+    sendLampUpdate(currentLampId);
+  }
+}
+
+// ====== 🎮 Canvas Events ======
+canvas.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  movePicker(x, y);
+  pickColorFromCanvas(x, y);
+});
+
+canvas.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  movePicker(x, y);
+  pickColorFromCanvas(x, y);
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+// ====== 🔁 Update Picker Position When Sliders Change ======
+modalHueSlider.addEventListener('input', updateColorMapPickerFromSliders);
+modalSaturationSlider.addEventListener('input', updateColorMapPickerFromSliders);
+
+function updateColorMapPickerFromSliders() {
+  const hue = parseInt(modalHueSlider.value);
+  const saturation = parseInt(modalSaturationSlider.value);
+
+  const x = (hue / 360) * canvas.width;
+  const y = (1 - saturation / 100) * canvas.height;
+
+  movePicker(x, y);
+   updateColorPreview(hue, saturation); 
+}
+
+// ====== 🧼 Reset picker position on modal open ======
+document.querySelectorAll('.gear-icon').forEach(icon => {
+  icon.addEventListener('click', () => {
+    const hue = lampStates[currentLampId]?.hue || 0;
+    const saturation = lampStates[currentLampId]?.saturation || 0;
+
+    const x = (hue / 360) * canvas.width;
+    const y = (1 - saturation / 100) * canvas.height;
+    movePicker(x, y);
+  });
+});
+
+
+
+
+// Initialize all control card displays with correct temp, dim, hue, and saturation values on page load
 window.addEventListener('DOMContentLoaded', () => {
   Object.entries(lampStates).forEach(([id, state]) => {
     const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
@@ -932,6 +1106,12 @@ window.addEventListener('DOMContentLoaded', () => {
       const dimSpan = card.querySelector('.dim-value');
       if (tempSpan) tempSpan.textContent = state.temp;
       if (dimSpan) dimSpan.textContent = state.dim;
+      // Optionally add hue/saturation display if present in card
+      const hueSpan = card.querySelector('.hue-value');
+      const saturationSpan = card.querySelector('.saturation-value');
+      if (hueSpan) hueSpan.textContent = state.hue;
+      if (saturationSpan) saturationSpan.textContent = state.saturation + "%";
+      
     }
   });
 });
@@ -1216,3 +1396,6 @@ pmStatusEl.className = `status-inline ${pmLevel.class}`;
   co2Chart.update();
   pmChart.update();
 }, 5000); // Assuming updates every 10 seconds
+
+
+
