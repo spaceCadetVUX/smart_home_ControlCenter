@@ -291,6 +291,7 @@ header h1 {
   border-radius: 10px;
   width: 500px;
   box-shadow: 0 0 10px rgba(0,0,0,0.25);
+  user-select: none;
   position: relative; /* Ensure positioning context for the close button */
 }
 
@@ -490,12 +491,12 @@ height: 200px;
 
 #color-preview {
   position: absolute;
-  right: -48px; /* Place it to the right of the canvas */
+  right: -100px; /* Place it to the right of the canvas */
   top: 50%;
   transform: translateY(-50%);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  width: 80px;
+  height: 150px;
+
   border: 2px solid #ccc;
   background: #fff;
   box-shadow: 0 0 4px rgba(0,0,0,0.15);
