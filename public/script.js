@@ -1,12 +1,10 @@
 // authentication
 let isEditingApi = false;
 let isEditingPassword = false;
-
 function saveInfo() {
   const apiInput = document.getElementById("api");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");
-
   const api = apiInput.value;
   const email = emailInput.value;
   const password = passwordInput.value;
@@ -65,33 +63,25 @@ window.onload = async function () {
   const savedPassword = localStorage.getItem("password");
   const savedApi = localStorage.getItem("api");
   const consoleEl = document.getElementById("console");
-
   if (savedEmail) document.getElementById("email").value = savedEmail;
   if (savedPassword) document.getElementById("password").value = savedPassword;
-
   updateApiNotice();
-
   document.getElementById("api").addEventListener("input", () => {
     isEditingApi = true;
     document.getElementById("toggleApi").style.display = "inline";
   });
-
   document.getElementById("password").addEventListener("input", () => {
     isEditingPassword = true;
     document.getElementById("togglePassword").style.display = "inline";
   });
-
   document.getElementById("toggleApi").style.display = "none";
   document.getElementById("togglePassword").style.display = "none";
-
   if (savedApi && savedEmail && savedPassword) {
     await startSessionAndWebSocket();  // ✅ use the async wrapper
   } else {
     consoleEl.textContent = "❌ Missing credentials. Please save API, Email, and Password.";
   }
 };
-
-
 
 // 🧠 Console Logger
 function logToConsole(message, data = null) {
@@ -102,19 +92,12 @@ function logToConsole(message, data = null) {
   consoleEl.scrollTop = consoleEl.scrollHeight;
 }
 
-
-
-
-
 let sessionDataToStore = null;
 let deviceInfo = null; // 🌐 Global deviceInfo
 let socket = null;
 const wire = 1;
 const SESSION_VALIDITY_MS = 1000 * 60 * 30; // 30 minutes
-
-
 // 📡 Get Casambi Session
-
 async function getCasambiSession(force = false) {
   const api = localStorage.getItem("api");
   const email = localStorage.getItem("email");
@@ -124,9 +107,7 @@ async function getCasambiSession(force = false) {
     logToConsole("❌ Missing API/Email/Password. Please save first.");
     return;
   }
-
   const localSession = JSON.parse(localStorage.getItem("sessionData") || "{}");
-
   // ✅ Use cached session if still valid
   if (!force && localSession.sessionId && Date.now() - localSession.timestamp < SESSION_VALIDITY_MS) {
     sessionDataToStore = localSession;
@@ -158,29 +139,24 @@ async function getCasambiSession(force = false) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ api, email, password })
     });
-
     if (!res.ok) {
       const errorText = await res.text();
       logToConsole("❌ Error getting session", errorText);
       return;
     }
-
     const data = await res.json();
     const networkId = Object.keys(data)[0];
     deviceInfo = data[networkId]; // ✅ assign to global
     const sessionId = deviceInfo.sessionId;
     const { id, address, name } = deviceInfo;
-
     sessionDataToStore = {
       sessionId,
       networkId,
       timestamp: Date.now(),
       fullData: data
     };
-
     localStorage.setItem("sessionData", JSON.stringify(sessionDataToStore));
     logToConsole("✅ New session stored.");
-
     logToConsole("🧩 New Device Info");
     logToConsole(`Session ID: ${sessionId}`);
     logToConsole(`Network ID: ${networkId}`);
@@ -192,12 +168,7 @@ async function getCasambiSession(force = false) {
   }
 }
 
-
-
-
-
 let messageLog = []; // 🧾 Stores only the latest relevant message
-
 // 🔌 WebSocket Connection
 function initCasambiWebSocket() {
   const api_key = localStorage.getItem("api");
@@ -262,8 +233,6 @@ function handleNewMessage(data) {
     logToConsole("⚠️ Peer offline");
   }
 }
-
-
 
 // Get the latest ID (Unit ID)   just call 
 function getLatestMessageId() {
@@ -441,19 +410,17 @@ function toggleConsole() {
 // })();
 
 
-
+// sendControl function
 function sendControl(label, value) {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
     logToConsole("❌ WebSocket not connected.");
     return;
   }
-
   const unitId = getLatestMessageId(); // assumes ID from message
   if (!unitId || unitId === "No ID available") {
     logToConsole("⚠️ No valid unit ID.");
     return;
   }
-
   const controlMsg = {
     wire,
     method: "controlUnit",
@@ -462,11 +429,9 @@ function sendControl(label, value) {
       [label]: { value: value }
     }
   };
-
   socket.send(JSON.stringify(controlMsg));
   logToConsole(`🎛️ Sent ${label} = ${value}`);
 }
-
 
 ["R", "G", "B", "T", "W"].forEach(label => {
   const sliderId = {
@@ -485,57 +450,6 @@ function sendControl(label, value) {
     });
   }
 });
-
-
-
-
-
-
-
-document.getElementById("updatePm25Btn").addEventListener("click", () => {
-  const input = document.getElementById("pm25Input");
-  const value = parseFloat(input.value);
-
-  if (isNaN(value)) {
-    logToConsole("⚠️ Invalid number for PM2.5 value.");
-    return;
-  }
-
-  sendSensorValue("$sensor_pm25", value);
-});
-
-function sendSensorValue(sensorLabel, value) {
-  if (!socket || socket.readyState !== WebSocket.OPEN) {
-    logToConsole("❌ WebSocket not connected.");
-    return;
-  }
-
-  const unitId = getLatestMessageId();
-  if (!unitId || unitId === "No ID available") {
-    logToConsole("⚠️ No valid unit ID.");
-    return;
-  }
-
-  const sensorMsg = {
-    wire,
-    method: "controlUnit",
-    id: unitId,
-    targetControls: {
-      [sensorLabel]: { value: value }
-    }
-  };
-
-  socket.send(JSON.stringify(sensorMsg));
-  logToConsole(`🌡️ Sent ${sensorLabel} = ${value}`);
-}
-
-
-
-
-
-
-
-
 
 
 
@@ -838,15 +752,6 @@ updateSliderUI(slider.value);
 // Initialize on load  of dating 
 
 
-
-
-
-
-
-
-
-
-// ...existing code...
 
 // modal
 const modal = document.getElementById("universal-modal");
