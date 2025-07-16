@@ -34,6 +34,7 @@ body {
 /* Sidebar styling for navigation */
 .sidebar {
   width: 200px;
+  min-width: 200px;
   background-color: #fff;
   padding: 20px;
   border-bottom-right-radius: 150px;
@@ -501,6 +502,34 @@ height: 200px;
   background: #fff;
   box-shadow: 0 0 4px rgba(0,0,0,0.15);
   z-index: 3;
+}
+
+.Lamp-Name-Edit {
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+}
+.Lamp-Name-Edit:hover {
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+.lamp-name-edit-input{
+  width: 60%;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+}
+.lamp-name-edit-ctn{
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 
 

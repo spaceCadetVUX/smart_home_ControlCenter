@@ -410,7 +410,7 @@ function toggleConsole() {
 // })();
 
 
-// sendControl function
+// send control function
 function sendControl(label, value) {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
     logToConsole("❌ WebSocket not connected.");
@@ -523,31 +523,31 @@ document.querySelector('nav button.active')?.click();
 // Store lamp states
 // ...existing code...
 const lampStates = {
-  // living
-  'celling-lamp-lv': {status: "on", temp: 1000, dim: 50, tempMin: 2700, tempMax: 16000, tempStep: 1, hue: 0, saturation: 0 },
-  'floor-lamp-lv': {status: "off", temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
-  'Table-Lamp-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
-  'Accent-Light-lv': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  // Living Room
+  'celling-lamp-lv': { name: "Ceiling LampA", status: "on", temp: 1000, dim: 50, tempMin: 2700, tempMax: 16000, tempStep: 1, hue: 0, saturation: 0 },
+  'floor-lamp-lv': { name: "Floor Lamp", status: "off", temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Table-Lamp-lv': { name: "Table Lamp", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Accent-Light-lv': { name: "Accent Light", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
 
-  // dinning
-  'chandelier-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
-  'Wall-Sconce-Dining': {status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  // Dining Room
+  'chandelier-Dining': { name: "Chandelier", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'Wall-Sconce-Dining': { name: "Wall Sconce", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
 
-  //  kitchen
-  'Recessed-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  'Cabinet-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  'Pendant-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  'Track-Light-kitchen': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  // Kitchen
+  'Recessed-Light-kitchen': { name: "Recessed Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Cabinet-Light-kitchen': { name: "Cabinet Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Pendant-Light-kitchen': { name: "Pendant Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Track-Light-kitchen': { name: "Track Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
 
-  // Bedroom 
-  'Ceiling-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  'Bedside-Lamp-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  'Smart-Light-Bed': {status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
-  
-  //Garageep
-  'LED-Ceiling-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
-  'otion-Sensor-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
-  'Task-Lighting-garage': {status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
+  // Bedroom
+  'Ceiling-Light-Bed': { name: "Ceiling Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Bedside-Lamp-Bed': { name: "Bedside Lamp", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+  'Smart-Light-Bed': { name: "Smart Light", status: "off", temp: 3000, dim: 70, tempMin: 3000, tempMax: 4000, tempStep: 1, hue: 0, saturation: 0 },
+
+  // Garage
+  'LED-Ceiling-garage': { name: "LED Ceiling", status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
+  'otion-Sensor-garage': { name: "Motion Sensor", status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 },
+  'Task-Lighting-garage': { name: "Task Lighting", status: "off", temp: 5000, dim: 70, tempMin: 4000, tempMax: 6500, tempStep: 1, hue: 0, saturation: 0 }
 };
 //
 
@@ -771,14 +771,48 @@ const modalSaturationValue = document.getElementById("modal-saturation-value");
 
 
 
+// --- Persistent Lamp Name Storage ---
+function saveLampNamesToStorage() {
+  const lampNames = {};
+  Object.keys(lampStates).forEach(id => {
+    lampNames[id] = lampStates[id].name || '';
+  });
+  localStorage.setItem('lampNames', JSON.stringify(lampNames));
+}
+
+function loadLampNamesFromStorage() {
+  const lampNames = JSON.parse(localStorage.getItem('lampNames') || '{}');
+  Object.keys(lampNames).forEach(id => {
+    if (lampStates[id]) lampStates[id].name = lampNames[id];
+  });
+}
+
+// Call this on page load
+window.addEventListener('DOMContentLoaded', () => {
+  loadLampNamesFromStorage();
+  Object.entries(lampStates).forEach(([id, state]) => {
+    const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
+    if (card) {
+      const h3 = card.querySelector('h3');
+      if (h3 && state.name) {
+        // Only change the text node, not the gear icon
+        h3.childNodes[0].textContent = state.name + ' ';
+      }
+    }
+  });
+});
+
+// --- Modal logic ---
 let currentLampId = null;
 
-// Open modal on gear icon click
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
     currentLampId = this.getAttribute('data-id');
     const lamp = lampStates[currentLampId];
     if (!lamp) return;
+
+    // Set lamp name input value
+    document.getElementById('modal-lamp-name-input').value = lamp.name || getLampCardName(currentLampId);
 
     //  Set dynamic range for temp
     modalTempSlider.min = lamp.tempMin;
@@ -801,11 +835,45 @@ document.querySelectorAll('.gear-icon').forEach(icon => {
   });
 });
 
+function getLampCardName(lampId) {
+  const lampCard = document.querySelector(`.gear-icon[data-id="${lampId}"]`)?.closest('.control-card');
+  const h3 = lampCard?.querySelector('h3');
+  return h3 ? h3.childNodes[0].textContent.trim() : '';
+}
+
 // Close modal
 modalCloseBtn.addEventListener('click', () => {
   modal.classList.remove('show');
   setTimeout(() => modal.style.display = 'none', 500);
 });
+
+document.getElementById('changeLampNameBtn').addEventListener('click', function () {
+  if (!currentLampId) return;
+  let newName = document.getElementById('modal-lamp-name-input').value.trim();
+  if (!newName) return;
+
+  // Limit name to 16 characters (including spaces)
+  if (newName.length > 16) {
+    alert("Lamp name cannot exceed 16 characters.");
+    newName = newName.substring(0, 16);
+    document.getElementById('modal-lamp-name-input').value = newName; // update input field
+    return; // Stop further processing
+  }
+
+  // Update lampStates and save to localStorage
+  lampStates[currentLampId].name = newName;
+  saveLampNamesToStorage();
+
+  // Update the card's h3 text
+  const lampCard = document.querySelector(`.gear-icon[data-id="${currentLampId}"]`)?.closest('.control-card');
+  if (lampCard) {
+    const h3 = lampCard.querySelector('h3');
+    if (h3) {
+      h3.childNodes[0].textContent = newName + ' ';
+    }
+  }
+});
+
 
 modalTempSlider.addEventListener('input', () => {
   const value = parseInt(modalTempSlider.value);

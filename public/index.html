@@ -44,7 +44,7 @@
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
          <!-- Ceiling Light -->
           <div class="control-card living-room">
-            <h3>cellig Lamp
+            <h3>Ceiling LampA
               <i class="bi bi-sliders gear-icon" data-id="celling-lamp-lv"></i>
             </h3>
             <div class="icon-button" onclick="handleClick()">
@@ -493,7 +493,7 @@
                     <span id="whiteValue">0</span>
                 </div>
                <input type="number" id="pm25Input" placeholder="Enter PM2.5 value" />
-<button id="updatePm25Btn">Update $sensor_pm25</button>
+              <button id="updatePm25Btn">Update $sensor_pm25</button>
 
           </div>
 
@@ -507,6 +507,11 @@
         <div class="modal-content">
           <span class="close-button" id="modal-close">&times;</span>
           <h4>Adjust Settings</h4>
+          <!-- // Lamp Name Edit -->
+          <div id="lamp-name-edit" class="lamp-name-edit-ctn">
+            <input type="text" id="modal-lamp-name-input" class="lamp-name-edit-input" />
+            <button id="changeLampNameBtn" class="Lamp-Name-Edit">Change Name</button>
+          </div>
           <!-- temp -->
           <label>Temperature: <span id="modal-temp-value">2800</span>K</label>
           <input type="range" min="2700" max="3000" step="10" value="2800" id="modal-temp-slider">
