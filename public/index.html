@@ -42,6 +42,35 @@
       </header>
       <section class="controls">
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
+         <!-- ALL Light CONTROL -->
+         <div class="control-card living-room">
+          <h3>ALL Light
+            <i class="bi bi-sliders gear-icon" data-id="ALL-Light"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+            <div class="temp-display"><span class="temp-value">2800</span>K</div>
+            <div class="dimmer"><span class="dim-value">50</span>%</div>
+          <label class="switch">
+            <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light">
+            <span class="slider"></span>
+          </label>
+
+          <!-- <div class="all-light-enable-group" style="margin-top:10px;">
+            <label class="switch">
+              <input type="checkbox" id="enableAllLightBtn" checked>
+              <span class="slider"></span>
+            </label>
+            <span style="font-size:14px; margin-left:8px;">Enable ALL Light</span>
+          </div> -->
+      </div>
+
+
+
+
+
+
          <!-- Ceiling Light -->
           <div class="control-card living-room">
             <h3>Ceiling LampA
@@ -466,7 +495,7 @@
           </div>
 
           <!-- // slider test -->
-          <div class="silder_test_ctn control-card setting-part">
+          <!-- <div class="silder_test_ctn control-card setting-part">
                 <div>
                   <label for="redSlider">🔴 Red:</label>
                   <input type="range" id="redSlider" min="0" max="100" step="1" />
@@ -494,8 +523,7 @@
                 </div>
                <input type="number" id="pm25Input" placeholder="Enter PM2.5 value" />
               <button id="updatePm25Btn">Update $sensor_pm25</button>
-
-          </div>
+          </div> -->
 
 
 

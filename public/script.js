@@ -521,9 +521,9 @@ document.querySelector('nav button.active')?.click();
 
 
 // Store lamp states
-// ...existing code...
 const lampStates = {
   // Living Room
+  'ALL-Light': { name: "ALL Light", status: "off", temp: 2800, dim: 50, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
   'celling-lamp-lv': { name: "Ceiling LampA", status: "on", temp: 1000, dim: 50, tempMin: 2700, tempMax: 16000, tempStep: 1, hue: 0, saturation: 0 },
   'floor-lamp-lv': { name: "Floor Lamp", status: "off", temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
   'Table-Lamp-lv': { name: "Table Lamp", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
@@ -861,7 +861,51 @@ document.getElementById('changeLampNameBtn').addEventListener('click', function 
   }
 
   // Update lampStates and save to localStorage
-  lampStates[currentLampId].name = newName;
+  lampStates[currentLampId].name = newName;  // Helper: Get all living room lamp IDs except ALL-Light
+  function getLivingRoomLampIds() {
+    return Object.keys(lampStates).filter(id =>
+      id !== 'ALL-Light' && id.endsWith('-lv')
+    );
+  }
+  
+  // When ALL Light switch is toggled
+  document.querySelector('input[type="checkbox"][data-id="ALL-Light"]').addEventListener('change', function() {
+    const checked = this.checked;
+    lampStates['ALL-Light'].status = checked ? "on" : "off";
+    getLivingRoomLampIds().forEach(id => {
+      lampStates[id].status = checked ? "on" : "off";
+      // Update UI
+      const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
+      if (card) {
+        card.querySelector('input[type="checkbox"]').checked = checked;
+      }
+    });
+    saveLampNamesToStorage?.();
+  });
+  
+  // When ALL Light modal sliders change, update all living room lamps
+  ['modal-temp-slider', 'modal-dim-slider', 'modal-hue-slider', 'modal-saturation-slider'].forEach(sliderId => {
+    document.getElementById(sliderId)?.addEventListener('input', function() {
+      const value = this.type === 'range' ? Number(this.value) : this.value;
+      const allLight = lampStates['ALL-Light'];
+      let key;
+      if (sliderId === 'modal-temp-slider') key = 'temp';
+      if (sliderId === 'modal-dim-slider') key = 'dim';
+      if (sliderId === 'modal-hue-slider') key = 'hue';
+      if (sliderId === 'modal-saturation-slider') key = 'saturation';
+      allLight[key] = value;
+      getLivingRoomLampIds().forEach(id => {
+        lampStates[id][key] = value;
+        // Update UI
+        const card = document.querySelector(`.gear-icon[data-id="${id}"]`)?.closest('.control-card');
+        if (card) {
+          if (key === 'temp') card.querySelector('.temp-value').textContent = value;
+          if (key === 'dim') card.querySelector('.dim-value').textContent = value;
+        }
+      });
+      saveLampNamesToStorage?.();
+    });
+  });
   saveLampNamesToStorage();
 
   // Update the card's h3 text
@@ -1119,7 +1163,8 @@ const co2RealtimeChart = new Chart(document.getElementById('co2Realtime'), {
     datasets: [{
       label: 'CO₂: (ppm)',
       data: [airData.CO2],
-      backgroundColor: '#FF6384'
+      backgroundColor: '#FF6384',
+      borderRadius: { topLeft: 12, topRight: 12, bottomLeft: 0, bottomRight: 0 }
     }]
   },
   options: {
@@ -1369,6 +1414,126 @@ pmStatusEl.className = `status-inline ${pmLevel.class}`;
   co2Chart.update();
   pmChart.update();
 }, 5000); // Assuming updates every 10 seconds
+
+
+
+// Function to control all living room lights
+function controlAllLivingRoomLights({ status, temp, dim, hue, saturation }) {
+  const livingRoomLamps = [
+    'celling-lamp-lv',
+    'floor-lamp-lv',
+    'Table-Lamp-lv',
+    'Accent-Light-lv'
+  ];
+
+  livingRoomLamps.forEach(lampId => {
+    if (lampStates[lampId]) {
+      if (status !== undefined) {
+        lampStates[lampId].status = status;
+        const checkbox = document.querySelector(`input[data-id="${lampId}"]`);
+        if (checkbox) checkbox.checked = (status === "on");
+        if (typeof sendSwitchStatus === 'function') {
+          sendSwitchStatus(checkbox);
+        }
+      }
+      if (temp !== undefined) {
+        lampStates[lampId].temp = temp;
+        const card = document.querySelector(`.gear-icon[data-id="${lampId}"]`)?.closest('.control-card');
+        if (card) card.querySelector('.temp-value').textContent = temp;
+      }
+      if (dim !== undefined) {
+        lampStates[lampId].dim = dim;
+        const card = document.querySelector(`.gear-icon[data-id="${lampId}"]`)?.closest('.control-card');
+        if (card) card.querySelector('.dim-value').textContent = dim;
+      }
+      if (hue !== undefined) {
+        lampStates[lampId].hue = hue;
+      }
+      if (saturation !== undefined) {
+        lampStates[lampId].saturation = saturation;
+      }
+    }
+  });
+}
+
+// Add event listener for ALL Light switch
+document.addEventListener('DOMContentLoaded', () => {
+  const allLightSwitch = document.querySelector('input[data-id="ALL-Light"]');
+  if (allLightSwitch) {
+    allLightSwitch.addEventListener('change', function() {
+      controlAllLivingRoomLights({ status: this.checked ? "on" : "off" });
+    });
+  }
+});
+
+// Add event listeners for ALL Light modal sliders
+document.addEventListener('DOMContentLoaded', () => {
+  // Temp
+  const tempSlider = document.getElementById('modal-temp-slider');
+  if (tempSlider) {
+    tempSlider.addEventListener('input', function() {
+      controlAllLivingRoomLights({ temp: parseInt(this.value) });
+      // Update UI temp-value for ALL-Light card if needed
+      const allCard = document.querySelector('.gear-icon[data-id="ALL-Light"]')?.closest('.control-card');
+      if (allCard) allCard.querySelector('.temp-value').textContent = this.value;
+    });
+  }
+  // Dim
+  const dimSlider = document.getElementById('modal-dim-slider');
+  if (dimSlider) {
+    dimSlider.addEventListener('input', function() {
+      controlAllLivingRoomLights({ dim: parseInt(this.value) });
+      const allCard = document.querySelector('.gear-icon[data-id="ALL-Light"]')?.closest('.control-card');
+      if (allCard) allCard.querySelector('.dim-value').textContent = this.value;
+    });
+  }
+  // Hue
+  const hueSlider = document.getElementById('modal-hue-slider');
+  if (hueSlider) {
+    hueSlider.addEventListener('input', function() {
+      controlAllLivingRoomLights({ hue: parseInt(this.value) });
+    });
+  }
+  // Saturation
+  const satSlider = document.getElementById('modal-saturation-slider');
+  if (satSlider) {
+    satSlider.addEventListener('input', function() {
+      controlAllLivingRoomLights({ saturation: parseInt(this.value) });
+    });
+  }
+});
+
+// Enable/disable ALL Light controls based on the enableAllLightBtn switch
+document.addEventListener('DOMContentLoaded', () => {
+  const enableAllLightBtn = document.getElementById('enableAllLightBtn');
+  const allLightSwitch = document.querySelector('input[data-id="ALL-Light"]');
+  // You may want to disable ALL Light modal sliders too:
+  const tempSlider = document.getElementById('modal-temp-slider');
+  const dimSlider = document.getElementById('modal-dim-slider');
+  const hueSlider = document.getElementById('modal-hue-slider');
+  const satSlider = document.getElementById('modal-saturation-slider');
+
+  if (enableAllLightBtn) {
+    function setAllLightEnabled(enabled) {
+      if (allLightSwitch) allLightSwitch.disabled = !enabled;
+      if (tempSlider) tempSlider.disabled = !enabled;
+      if (dimSlider) dimSlider.disabled = !enabled;
+      if (hueSlider) hueSlider.disabled = !enabled;
+      if (satSlider) satSlider.disabled = !enabled;
+      // Optionally, add a visual effect
+      const allCard = document.querySelector('.gear-icon[data-id="ALL-Light"]')?.closest('.control-card');
+      if (allCard) {
+        allCard.style.opacity = enabled ? "1" : "0.5";
+      }
+    }
+    // Initial state
+    setAllLightEnabled(enableAllLightBtn.checked);
+
+    enableAllLightBtn.addEventListener('change', function () {
+      setAllLightEnabled(this.checked);
+    });
+  }
+});
 
 
 
