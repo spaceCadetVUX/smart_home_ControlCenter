@@ -805,29 +805,51 @@ window.addEventListener('DOMContentLoaded', () => {
 // --- Modal logic ---
 let currentLampId = null;
 
+
+// Fix: Support opening modal for ALL Light cards in all rooms (not just living)
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
     currentLampId = this.getAttribute('data-id');
-    const lamp = lampStates[currentLampId];
-    if (!lamp) return;
+    // Accept ALL-Light, ALL-Light-dining, ALL-Light-kitchen, etc.
+    const lamp = lampStates[currentLampId] || lampStates['ALL-Light'] || lampStates['ALL-Light-dining'] || lampStates['ALL-Light-kitchen'] || lampStates['ALL-Light-bedroom'] || lampStates['ALL-Light-garage'];
+    // If not found in lampStates, fallback to empty object to avoid crash
+    if (!lampStates[currentLampId]) {
+      // If it's an ALL-Light-<room> card, create a temp lamp object for modal
+      if (/^ALL-Light-(dining|kitchen|bedroom|garage)$/.test(currentLampId)) {
+        // Use default values for modal
+        lampStates[currentLampId] = {
+          name: `ALL Light`,
+          status: "off",
+          temp: 2700,
+          dim: 70,
+          tempMin: 2700,
+          tempMax: 4000,
+          tempStep: 1,
+          hue: 0,
+          saturation: 0
+        };
+      }
+    }
+    const lampObj = lampStates[currentLampId];
+    if (!lampObj) return;
 
     // Set lamp name input value
-    document.getElementById('modal-lamp-name-input').value = lamp.name || getLampCardName(currentLampId);
+    document.getElementById('modal-lamp-name-input').value = lampObj.name || getLampCardName(currentLampId);
 
-    //  Set dynamic range for temp
-    modalTempSlider.min = lamp.tempMin;
-    modalTempSlider.max = lamp.tempMax;
-    modalTempSlider.step = lamp.tempStep;
+    // Set dynamic range for temp
+    modalTempSlider.min = lampObj.tempMin;
+    modalTempSlider.max = lampObj.tempMax;
+    modalTempSlider.step = lampObj.tempStep;
 
     // Load values
-    modalTempSlider.value = lamp.temp;
-    modalDimSlider.value = lamp.dim;
-    modalTempValue.textContent = lamp.temp;
-    modalDimValue.textContent = lamp.dim;
-    modalHueSlider.value = lamp.hue;
-    modalSaturationSlider.value = lamp.saturation;
-    modalHueValue.textContent = lamp.hue;
-    modalSaturationValue.textContent = lamp.saturation + "%";
+    modalTempSlider.value = lampObj.temp;
+    modalDimSlider.value = lampObj.dim;
+    modalTempValue.textContent = lampObj.temp;
+    modalDimValue.textContent = lampObj.dim;
+    modalHueSlider.value = lampObj.hue;
+    modalSaturationSlider.value = lampObj.saturation;
+    modalHueValue.textContent = lampObj.hue;
+    modalSaturationValue.textContent = lampObj.saturation + "%";
 
     // Show modal
     modal.style.display = 'block';
@@ -1533,6 +1555,85 @@ document.addEventListener('DOMContentLoaded', () => {
       setAllLightEnabled(this.checked);
     });
   }
+});
+// --- Helper: Get all lamp IDs for each room ---
+function getRoomLampIds(room) {
+  const map = {
+    'dining': ['chandelier-Dining', 'Wall-Sconce-Dining'],
+    'kitchen': ['Recessed-Light-kitchen', 'Cabinet-Light-kitchen', 'Pendant-Light-kitchen', 'Track-Light-kitchen'],
+    'bedroom': ['Ceiling-Light-Bed', 'Bedside-Lamp-Bed', 'Smart-Light-Bed'],
+    'garage': ['LED-Ceiling-garage', 'otion-Sensor-garage', 'Task-Lighting-garage']
+  };
+  return map[room] || [];
+}
+
+// --- Control all lights in a room ---
+function controlAllRoomLights(room, { status, temp, dim, hue, saturation }) {
+  const lampIds = getRoomLampIds(room);
+  lampIds.forEach(lampId => {
+    if (lampStates[lampId]) {
+      if (status !== undefined) {
+        lampStates[lampId].status = status;
+        const checkbox = document.querySelector(`input[data-id="${lampId}"]`);
+        if (checkbox) checkbox.checked = (status === "on");
+        if (typeof sendSwitchStatus === 'function') sendSwitchStatus(checkbox);
+      }
+      if (temp !== undefined) {
+        lampStates[lampId].temp = temp;
+        const card = document.querySelector(`.gear-icon[data-id="${lampId}"]`)?.closest('.control-card');
+        if (card) card.querySelector('.temp-value').textContent = temp;
+      }
+      if (dim !== undefined) {
+        lampStates[lampId].dim = dim;
+        const card = document.querySelector(`.gear-icon[data-id="${lampId}"]`)?.closest('.control-card');
+        if (card) card.querySelector('.dim-value').textContent = dim;
+      }
+      if (hue !== undefined) lampStates[lampId].hue = hue;
+      if (saturation !== undefined) lampStates[lampId].saturation = saturation;
+    }
+  });
+}
+
+// --- Add event listeners for ALL Light switches and sliders for each room ---
+['dining', 'kitchen', 'bedroom', 'garage'].forEach(room => {
+  const allLightId = `ALL-Light-${room}`;
+  // Switch
+  document.addEventListener('DOMContentLoaded', () => {
+    const allLightSwitch = document.querySelector(`input[data-id="${allLightId}"]`);
+    if (allLightSwitch) {
+      allLightSwitch.addEventListener('change', function() {
+        controlAllRoomLights(room, { status: this.checked ? "on" : "off" });
+      });
+    }
+  });
+  // Sliders (modal)
+  document.addEventListener('DOMContentLoaded', () => {
+    const tempSlider = document.getElementById('modal-temp-slider');
+    const dimSlider = document.getElementById('modal-dim-slider');
+    const hueSlider = document.getElementById('modal-hue-slider');
+    const satSlider = document.getElementById('modal-saturation-slider');
+    // You may want to check if the modal is for this ALL Light
+    if (tempSlider) {
+      tempSlider.addEventListener('input', function() {
+        if (currentLampId === allLightId) controlAllRoomLights(room, { temp: parseInt(this.value) });
+      });
+    }
+    if (dimSlider) {
+      dimSlider.addEventListener('input', function() {
+        if (currentLampId === allLightId) controlAllRoomLights(room, { dim: parseInt(this.value) });
+      });
+    }
+    if (hueSlider) {
+      hueSlider.addEventListener('input', function() {
+        if (currentLampId === allLightId) controlAllRoomLights(room, { hue: parseInt(this.value) });
+      });
+    }
+    if (satSlider) {
+      satSlider.addEventListener('input', function() {
+        if (currentLampId === allLightId) controlAllRoomLights(room, { saturation: parseInt(this.value) });
+      });
+    }
+  });
 });
 
 

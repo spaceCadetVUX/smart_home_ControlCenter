@@ -42,7 +42,8 @@
       </header>
       <section class="controls">
         <!-- Living Room Control Cards (2700K–3000K, Dimmable, Layered) -->
-         <!-- ALL Light CONTROL -->
+
+         <!-- ALL Light CONTROL: Living Room -->
          <div class="control-card living-room">
           <h3>ALL Light
             <i class="bi bi-sliders gear-icon" data-id="ALL-Light"></i>
@@ -56,14 +57,70 @@
             <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light">
             <span class="slider"></span>
           </label>
+      </div>
 
-          <!-- <div class="all-light-enable-group" style="margin-top:10px;">
-            <label class="switch">
-              <input type="checkbox" id="enableAllLightBtn" checked>
-              <span class="slider"></span>
-            </label>
-            <span style="font-size:14px; margin-left:8px;">Enable ALL Light</span>
-          </div> -->
+         <!-- ALL Light CONTROL: Dining Room -->
+         <div class="control-card dining-room">
+          <h3>ALL Light
+            <i class="bi bi-sliders gear-icon" data-id="ALL-Light-dining"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+            <div class="temp-display"><span class="temp-value">2700</span>K</div>
+            <div class="dimmer"><span class="dim-value">70</span>%</div>
+          <label class="switch">
+            <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light-dining">
+            <span class="slider"></span>
+          </label>
+      </div>
+
+         <!-- ALL Light CONTROL: Kitchen Room -->
+         <div class="control-card kitchen-room">
+          <h3>ALL Light
+            <i class="bi bi-sliders gear-icon" data-id="ALL-Light-kitchen"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+            <div class="temp-display"><span class="temp-value">4000</span>K</div>
+            <div class="dimmer"><span class="dim-value">100</span>%</div>
+          <label class="switch">
+            <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light-kitchen">
+            <span class="slider"></span>
+          </label>
+      </div>
+
+         <!-- ALL Light CONTROL: Bedroom Room -->
+         <div class="control-card bedroom-room">
+          <h3>ALL Light
+            <i class="bi bi-sliders gear-icon" data-id="ALL-Light-bedroom"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+            <div class="temp-display"><span class="temp-value">2700</span>K</div>
+            <div class="dimmer"><span class="dim-value">30</span>%</div>
+          <label class="switch">
+            <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light-bedroom">
+            <span class="slider"></span>
+          </label>
+      </div>
+
+         <!-- ALL Light CONTROL: Garage Room -->
+         <div class="control-card garage-room">
+          <h3>ALL Light
+            <i class="bi bi-sliders gear-icon" data-id="ALL-Light-garage"></i>
+          </h3>
+          <div class="icon-button" onclick="handleClick()">
+            <i class="bi bi-lamp-fill"></i>
+          </div>
+            <div class="temp-display"><span class="temp-value">5000</span>K</div>
+            <div class="dimmer"><span class="dim-value">100</span>%</div>
+          <label class="switch">
+            <input type="checkbox"  onchange="sendSwitchStatus(this)" data-id="ALL-Light-garage">
+            <span class="slider"></span>
+          </label>
       </div>
 
 
