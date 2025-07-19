@@ -228,6 +228,13 @@ header h1 {
   font-weight: bold;
 }
 
+/* Gear icon active state (when modal is open) */
+.gear-icon.active {
+  transform: scale(1.2);
+  color: #007bff;
+  font-weight: bold;
+}
+
 
 
 
@@ -530,6 +537,43 @@ height: 200px;
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+/* Blind name editor styling */
+.blind-name-edit-ctn {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.blind-name-edit-input {
+  width: 60%;
+  padding: 6px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: inset 0 0 4px rgba(0,0,0,0.1);
+}
+
+.blind-name-edit-btn {
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.blind-name-edit-btn:hover {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
 }
 
 
@@ -1615,6 +1659,127 @@ button.add-lamp-btn:focus {
 .all-light-enable-group span {
   font-size: 14px;
   margin-left: 4px;
+}
+
+/* ALL Light Control Cards - Special Styling */
+.control-card:has([data-id*="ALL-Light"]) {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 50%, #e8f0ff 100%) !important;
+  border: 2px solid #007bff !important;
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.25) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add a subtle animated border effect */
+.control-card:has([data-id*="ALL-Light"])::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(0, 123, 255, 0.1), transparent);
+  animation: shimmer 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0%, 100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+/* ALL Light card titles get special styling */
+.control-card:has([data-id*="ALL-Light"]) h3 {
+  color: #007bff !important;
+  font-weight: bold !important;
+  text-shadow: 0 1px 2px rgba(0, 123, 255, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+/* ALL Light icons get special color */
+.control-card:has([data-id*="ALL-Light"]) .bi-lamp-fill {
+  color: #007bff !important;
+  filter: drop-shadow(0 2px 4px rgba(0, 123, 255, 0.3));
+  font-size: 38px !important;
+}
+
+/* ALL Light gear icon gets special styling */
+.control-card:has([data-id*="ALL-Light"]) .gear-icon {
+  color: #007bff !important;
+  background: rgba(0, 123, 255, 0.15) !important;
+  border-radius: 50%;
+  padding: 6px;
+  transition: all 0.3s ease;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+.control-card:has([data-id*="ALL-Light"]) .gear-icon:hover {
+  background: #007bff !important;
+  color: white !important;
+  transform: scale(1.3) rotate(90deg) !important;
+}
+
+/* ALL Light gear icon active state (when modal is open) */
+.control-card:has([data-id*="ALL-Light"]) .gear-icon.active {
+  background: #007bff !important;
+  color: white !important;
+  transform: scale(1.3) rotate(90deg) !important;
+}
+
+/* ALL Light switch styling - more specific selector */
+.control-card:has([data-id*="ALL-Light"]) label.switch {
+  position: absolute !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2 !important;
+  margin: 0 !important;
+}
+
+.control-card:has([data-id*="ALL-Light"]) .switch input:checked + .slider {
+  background-color: #007bff !important;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5) !important;
+}
+
+.control-card:has([data-id*="ALL-Light"]) .slider {
+  border: 2px solid rgba(0, 123, 255, 0.3);
+}
+
+/* ALL Light switch knob (white circle) positioning */
+.control-card:has([data-id*="ALL-Light"]) .slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 0px;        /* ← Adjust horizontal position of white knob */
+  bottom: 1px;      /* ← Adjust vertical position of white knob */
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.control-card:has([data-id*="ALL-Light"]) input:checked + .slider:before {
+  transform: translateX(26px); /* ← Distance knob travels when switched on */
+}
+
+/* ALL Light temperature and dimmer values */
+.control-card:has([data-id*="ALL-Light"]) .temp-display,
+.control-card:has([data-id*="ALL-Light"]) .dimmer {
+  color: #007bff !important;
+  font-weight: 600 !important;
+  position: relative;
+  z-index: 2;
 }
 
 

@@ -523,7 +523,7 @@ document.querySelector('nav button.active')?.click();
 // Store lamp states
 const lampStates = {
   // Living Room
-  'ALL-Light': { name: "ALL Light", status: "off", temp: 2800, dim: 50, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
+  'ALL-Light': { name: "Luxe Master Control", status: "off", temp: 2800, dim: 50, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
   'celling-lamp-lv': { name: "Ceiling LampA", status: "on", temp: 1000, dim: 50, tempMin: 2700, tempMax: 16000, tempStep: 1, hue: 0, saturation: 0 },
   'floor-lamp-lv': { name: "Floor Lamp", status: "off", temp: 2700, dim: 60, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
   'Table-Lamp-lv': { name: "Table Lamp", status: "off", temp: 2700, dim: 70, tempMin: 2700, tempMax: 3000, tempStep: 1, hue: 0, saturation: 0 },
@@ -641,8 +641,13 @@ const slider = document.getElementById("blindSlider");   // slider
 const sliderValue = document.getElementById("sliderValue");   // // check posistion
 const openBtn = document.getElementById("openBtn");
 const closeBtn = document.getElementById("closeBtn");
-const blindSelector = document.getElementById("blindSelector");     // options
 const selectAllSwitch = document.getElementById("selectAllSwitch");  // slect all blinds
+
+// Get selected blind ID from dropdown
+function getSelectedBlindId() {
+  const blindSelector = document.getElementById('blindSelector');
+  return blindSelector ? blindSelector.value : 'living_blind_1';
+}
 
 const blindStates = {
   living_blind_1: 100,
@@ -699,7 +704,7 @@ function animateSliderTo(target) {
       Object.values(blindStates).length;
     animateSliderKnob(parseInt(slider.value), target);
   } else {
-    const selected = blindSelector.value;
+    const selected = getSelectedBlindId();
     const from = blindStates[selected];
     blindStates[selected] = target;
     animateSliderKnob(from, target);
@@ -713,7 +718,7 @@ slider.addEventListener("input", function () {
       blindStates[key] = value;
     });
   } else {
-    const selected = blindSelector.value;
+    const selected = getSelectedBlindId();
     blindStates[selected] = value;
   }
   updateSliderUI(value);
@@ -721,10 +726,11 @@ slider.addEventListener("input", function () {
 // Open/Close buttons
 openBtn.addEventListener("click", () => animateSliderTo(100));
 closeBtn.addEventListener("click", () => animateSliderTo(0));
-// Blind selection change
-blindSelector.addEventListener("change", () => {
-  if (!selectAllSwitch.checked) {
-    const selected = blindSelector.value;
+
+// Blind selection change (dropdown)
+document.addEventListener('change', function(e) {
+  if (e.target.id === 'blindSelector' && !selectAllSwitch.checked) {
+    const selected = getSelectedBlindId();
     const value = blindStates[selected];
     slider.value = value;
     updateSliderUI(value);
@@ -740,18 +746,17 @@ selectAllSwitch.addEventListener("change", () => {
     slider.value = Math.round(avg);
     updateSliderUI(Math.round(avg));
   } else {
-    const selected = blindSelector.value;
+    const selected = getSelectedBlindId();
     const value = blindStates[selected];
     slider.value = value;
     updateSliderUI(value);
   }
 });
 // Initial setup
-slider.value = blindStates[blindSelector.value];
+slider.value = blindStates[getSelectedBlindId()];
 updateSliderUI(slider.value);
+
 // Initialize on load  of dating 
-
-
 
 // modal
 const modal = document.getElementById("universal-modal");
@@ -810,15 +815,26 @@ let currentLampId = null;
 document.querySelectorAll('.gear-icon').forEach(icon => {
   icon.addEventListener('click', function () {
     currentLampId = this.getAttribute('data-id');
+    
+    // Add active class to the clicked gear icon
+    this.classList.add('active');
+    
     // Accept ALL-Light, ALL-Light-dining, ALL-Light-kitchen, etc.
     const lamp = lampStates[currentLampId] || lampStates['ALL-Light'] || lampStates['ALL-Light-dining'] || lampStates['ALL-Light-kitchen'] || lampStates['ALL-Light-bedroom'] || lampStates['ALL-Light-garage'];
     // If not found in lampStates, fallback to empty object to avoid crash
     if (!lampStates[currentLampId]) {
       // If it's an ALL-Light-<room> card, create a temp lamp object for modal
       if (/^ALL-Light-(dining|kitchen|bedroom|garage)$/.test(currentLampId)) {
+        // Determine luxury name based on room
+        let luxuryName = "Luxe Master Control";
+        if (currentLampId.includes('dining')) luxuryName = "Elite Ambiance Control";
+        else if (currentLampId.includes('kitchen')) luxuryName = "Premium Culinary Control";
+        else if (currentLampId.includes('bedroom')) luxuryName = "Serene Suite Control";
+        else if (currentLampId.includes('garage')) luxuryName = "Executive Workspace Control";
+        
         // Use default values for modal
         lampStates[currentLampId] = {
-          name: `ALL Light`,
+          name: luxuryName,
           status: "off",
           temp: 2700,
           dim: 70,
@@ -865,8 +881,26 @@ function getLampCardName(lampId) {
 
 // Close modal
 modalCloseBtn.addEventListener('click', () => {
+  // Remove active class from all gear icons
+  document.querySelectorAll('.gear-icon.active').forEach(icon => {
+    icon.classList.remove('active');
+  });
+  
   modal.classList.remove('show');
   setTimeout(() => modal.style.display = 'none', 500);
+});
+
+// Close modal when clicking outside of it
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    // Remove active class from all gear icons
+    document.querySelectorAll('.gear-icon.active').forEach(icon => {
+      icon.classList.remove('active');
+    });
+    
+    modal.classList.remove('show');
+    setTimeout(() => modal.style.display = 'none', 500);
+  }
 });
 
 document.getElementById('changeLampNameBtn').addEventListener('click', function () {
@@ -1268,21 +1302,29 @@ const co2Chart = new Chart(co2HistoryCtx, {
       label: 'CO₂ (ppm)',
       data: co2History,
       borderColor: '#ff6384',
+      backgroundColor: 'rgba(255, 99, 132, 0.1)',
       fill: false,
-      tension: 0.3
+      tension: 0.4,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      borderWidth: 2
     }]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 750,
+      easing: 'easeInOutQuart'
+    },
     interaction: {
-      mode: 'nearest',   // can also use 'index' for aligned values
-      intersect: false   // allow hovering even if not directly on line
+      mode: 'nearest',
+      intersect: false
     },
     plugins: {
       tooltip: {
         enabled: true,
-        mode: 'index',   // show all datasets at that index
+        mode: 'index',
         intersect: false,
       }
     },
@@ -1290,16 +1332,19 @@ const co2Chart = new Chart(co2HistoryCtx, {
       x: {
         ticks: { maxTicksLimit: 6 },
         title: { display: true, text: 'Time' },
-  
+        grid: {
+          color: 'rgba(0,0,0,0.1)'
+        }
       },
       y: {
         beginAtZero: true,
         title: { display: true, text: 'ppm' },
-
+        grid: {
+          color: 'rgba(0,0,0,0.1)'
+        }
       }
     }
   }
-
 });
 
 // PM History Line Chart
@@ -1313,21 +1358,33 @@ const pmChart = new Chart(pmHistoryCtx, {
         label: 'PM2.5 (µg/m³)',
         data: pm25History,
         borderColor: '#36a2eb',
+        backgroundColor: 'rgba(54, 162, 235, 0.1)',
         fill: false,
-        tension: 0.3
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        borderWidth: 2
       },
       {
         label: 'PM10 (µg/m³)',
         data: pm10History,
         borderColor: '#ffce56',
+        backgroundColor: 'rgba(255, 206, 86, 0.1)',
         fill: false,
-        tension: 0.3
+        tension: 0.4,
+        pointRadius: 3,
+        pointHoverRadius: 5,
+        borderWidth: 2
       }
     ]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
+    animation: {
+      duration: 750,
+      easing: 'easeInOutQuart'
+    },
     interaction: {
       mode: 'index',
       intersect: false
@@ -1343,15 +1400,19 @@ const pmChart = new Chart(pmHistoryCtx, {
       x: {
         ticks: { maxTicksLimit: 6 },
         title: { display: true, text: 'Time' },
+        grid: {
+          color: 'rgba(0,0,0,0.1)'
+        }
       },
       y: {
         beginAtZero: true,
         title: { display: true, text: 'µg/m³' },
-
+        grid: {
+          color: 'rgba(0,0,0,0.1)'
+        }
       }
     }
   }
-
 });
 
 
@@ -1380,10 +1441,10 @@ setInterval(() => {
 
   // --- Update Real-Time Charts ---
   co2RealtimeChart.data.datasets[0].data = [airData.CO2];
-  co2RealtimeChart.update();
+  co2RealtimeChart.update('none'); // Use 'none' mode for no animation on realtime charts
 
   pmRealtimeChart.data.datasets[0].data = [airData.PM25, airData.PM10];
-  pmRealtimeChart.update();
+  pmRealtimeChart.update('none');
 
   // --- Add to Buffers (sliding window) ---
   // Update sliding buffers
@@ -1407,17 +1468,20 @@ const worstPM = Math.max(avgPM25, avgPM10);
 // Determine CO2 status
 const co2Level = getAirQualityLevel('CO2', avgCO2);
 const co2StatusEl = document.getElementById('co2Status');
-co2StatusEl.textContent = `Status: ${co2Level.text}`;
-co2StatusEl.className = `status-inline ${co2Level.class}`;
+if (co2StatusEl) {
+  co2StatusEl.textContent = `Status: ${co2Level.text}`;
+  co2StatusEl.className = `status-inline ${co2Level.class}`;
+}
 
 // Determine PM status
 const pmLevel = getAirQualityLevel('PM', worstPM);
 const pmStatusEl = document.getElementById('pmStatus');
-pmStatusEl.textContent = `Status: ${pmLevel.text}`;
-pmStatusEl.className = `status-inline ${pmLevel.class}`;
+if (pmStatusEl) {
+  pmStatusEl.textContent = `Status: ${pmLevel.text}`;
+  pmStatusEl.className = `status-inline ${pmLevel.class}`;
+}
 
-
-  // --- Update History Charts ---
+  // --- Update History Charts (Smooth Updates) ---
   const now = new Date();
   const timeLabel = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
@@ -1433,8 +1497,9 @@ pmStatusEl.className = `status-inline ${pmLevel.class}`;
     pm10History.shift();
   }
 
-  co2Chart.update();
-  pmChart.update();
+  // Use smooth animation for history charts
+  co2Chart.update('active');
+  pmChart.update('active');
 }, 5000); // Assuming updates every 10 seconds
 
 
